@@ -156,10 +156,6 @@ case "${version}" in
         version=$(retry curl --proto '=https' --tlsv1.2 -fsSL --retry 10 "https://crates.io/api/v1/crates/${tool}" | jq -r '.crate.max_stable_version')
         ;;
 esac
-case "${base_distro}" in
-    # https://github.com/actions/cache/issues/479
-    alpine) sys_install tar ;;
-esac
 
 bin_dir="${RUNNER_TOOL_CACHE}/${tool}/bin"
 echo "${bin_dir}" >>"${GITHUB_PATH}"

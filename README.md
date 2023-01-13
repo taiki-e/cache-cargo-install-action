@@ -99,6 +99,7 @@ This action has been tested for GitHub-hosted runners (Ubuntu, macOS, Windows) a
 To use this action in self-hosted runners or in containers, you will need to install at least the following:
 
 - bash
+- GNU tar
 - cargo
 
 ## Related Projects

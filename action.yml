@@ -1,0 +1,30 @@
+name: cache-cargo-install-action
+description: GitHub Action for cargo install with cache
+
+inputs:
+  tool:
+    description: Crate to install
+    required: true
+
+# Note:
+# - inputs.* should be manually mapped to INPUT_* due to https://github.com/actions/runner/issues/665
+# - Use GITHUB_*/RUNNER_* instead of github.*/runner.* due to https://github.com/actions/runner/issues/2185
+runs:
+  using: composite
+  steps:
+    - name: Pre Cache
+      id: pre
+      run: bash --noprofile --norc "${GITHUB_ACTION_PATH:?}/pre.sh"
+      shell: bash
+      env:
+        INPUT_TOOL: ${{ inputs.tool }}
+    - name: Restore Cache
+      id: cache
+      uses: actions/cache@v3
+      with:
+        path: ${{ steps.pre.outputs.path }}
+        key: ${{ steps.pre.outputs.key }}
+    - name: Install ${{ inputs.tool }}
+      run: cargo install -f "${{ steps.pre.outputs.tool }}" --root "${RUNNER_TOOL_CACHE}/${{ steps.pre.outputs.tool }}" --locked --version "${{ steps.pre.outputs.version }}"
+      shell: bash
+      if: steps.cache.outputs.cache-hit != 'true'

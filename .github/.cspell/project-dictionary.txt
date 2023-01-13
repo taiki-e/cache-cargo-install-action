@@ -1,0 +1,10 @@
+binstall
+distro
+doas
+Dpkg
+enablerepo
+epel
+libc
+microdnf
+rockylinux
+xscale

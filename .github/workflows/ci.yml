@@ -1,0 +1,118 @@
+name: CI
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - dev
+  schedule:
+    - cron: '0 1 * * *'
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  tidy:
+    uses: taiki-e/workflows/.github/workflows/tidy-no-rust.yml@main
+
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-20.04
+          - os: ubuntu-22.04
+          - os: ubuntu-20.04
+            tool1: cargo-hack@0.5.24
+            tool2: cargo-llvm-cov@0.5.3
+          - os: macos-11
+          - os: windows-2019
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+      - uses: ./
+        with:
+          tool: ${{ matrix.tool1 || 'cargo-hack' }}
+      - run: cargo hack --version
+      - uses: ./
+        with:
+          tool: ${{ matrix.tool2 || 'cargo-llvm-cov' }}
+      - run: cargo llvm-cov --version
+
+  test-container:
+    strategy:
+      fail-fast: false
+      matrix:
+        container:
+          - ubuntu:18.04 # glibc 2.27
+          - ubuntu:20.04 # glibc 2.31
+          - ubuntu:22.04 # glibc 2.35
+          - debian:10-slim # glibc 2.28
+          - debian:11-slim # glibc 2.31
+          - rockylinux:8 # glibc 2.28
+          - rockylinux:8-minimal # glibc 2.28
+          - fedora:latest # glibc 2.36 (as of fedora 37)
+          - centos:7 # glibc 2.17
+          - alpine:latest # musl 1.2.3 (as of alpine 3.17)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    container: ${{ matrix.container }}
+    steps:
+      - name: Install requirements (ubuntu)
+        run: |
+          set -euxo pipefail
+          apt-get -o Acquire::Retries=10 -qq update
+          apt-get -o Acquire::Retries=10 -qq -o Dpkg::Use-Pty=0 install -y --no-install-recommends cargo
+        if: startsWith(matrix.container, 'ubuntu')
+      - name: Install requirements (debian)
+        run: |
+          set -euxo pipefail
+          apt-get -o Acquire::Retries=10 -qq update
+          apt-get -o Acquire::Retries=10 -qq -o Dpkg::Use-Pty=0 install -y --no-install-recommends ca-certificates curl gcc libc6-dev
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain stable
+          echo "$HOME/.cargo/bin" >>"${GITHUB_PATH}"
+          apt-get -qq -o Dpkg::Use-Pty=0 remove -y curl
+        if: startsWith(matrix.container, 'debian')
+      - name: Install requirements (fedora/rockylinux)
+        run: |
+          set -euxo pipefail
+          dnf=dnf
+          if ! type -P dnf &>/dev/null; then
+            dnf=microdnf
+          fi
+          # tar and gzip are required for actions/checkout on rockylinux:*-minimal
+          $dnf install -y cargo tar gzip
+        if: startsWith(matrix.container, 'fedora') || startsWith(matrix.container, 'rockylinux')
+      - name: Install requirements (centos)
+        run: |
+          set -euxo pipefail
+          yum install -y gcc
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain stable
+          echo "$HOME/.cargo/bin" >>"${GITHUB_PATH}"
+        if: startsWith(matrix.container, 'centos')
+      - name: Install requirements (alpine)
+        run: |
+          set -eux
+          apk add bash cargo
+        shell: sh
+        if: startsWith(matrix.container, 'alpine')
+      - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+      - uses: ./
+        with:
+          tool: ${{ matrix.tool1 || 'cargo-hack' }}
+      - run: cargo hack --version
+      - uses: ./
+        with:
+          tool: ${{ matrix.tool2 || 'cargo-llvm-cov' }}
+      - run: cargo llvm-cov --version

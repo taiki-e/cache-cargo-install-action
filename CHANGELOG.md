@@ -10,6 +10,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 ## [Unreleased]
 
+- Remove extra `apk` calls on alpine.
+
 ## [1.0.0] - 2023-01-13
 
 Initial release

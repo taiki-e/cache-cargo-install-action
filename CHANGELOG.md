@@ -10,6 +10,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 ## [Unreleased]
 
+- Prevent pre-release version from being installed as the latest version when patch/minor version is omitted.
+
 ## [1.1.0] - 2023-01-14
 
 - Support omitting the patch/minor version.

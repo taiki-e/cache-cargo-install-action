@@ -40,7 +40,14 @@ To install a specific version, use `@version` syntax:
     tool: cargo-hack@0.5.24
 ```
 
-Omitting minor/patch versions is not supported yet.
+You can also omit patch version.
+(You can also omit the minor version if the major version is 1 or greater.)
+
+```yaml
+- uses: taiki-e/cache-cargo-install-action@v1
+  with:
+    tool: cargo-hack@0.5
+```
 
 ## Migrate from/to install-action
 
@@ -88,8 +95,6 @@ The interface of this action is a subset of the interface of [install-action], s
       with:
         tool: cargo-minimal-versions
   ```
-
-- install-action supports omitting minor/patch versions, but this action does not.
 
 - install-action supports `@<tool_name>` shorthand, but this action does not.
 

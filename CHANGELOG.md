@@ -10,6 +10,18 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 ## [Unreleased]
 
+- Support omitting the patch/minor version.
+
+  For example:
+
+  ```yaml
+  - uses: taiki-e/cache-cargo-install-action@v1
+    with:
+      tool: cargo-hack@0.5
+  ```
+
+  You can also omit the minor version if the major version of tool is 1 or greater.
+
 ## [1.0.1] - 2023-01-13
 
 - Remove extra `apk` calls on alpine.

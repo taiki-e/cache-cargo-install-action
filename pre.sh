@@ -124,6 +124,7 @@ esac
 if [[ "${tool}" == *","* ]]; then
     bail "cache-cargo-install-action does not support specifying multiple crates yet; consider calling this action per crate"
 fi
+fetch=''
 if [[ "${tool}" == *"@"* ]]; then
     version="${tool#*@}"
     tool="${tool%@*}"
@@ -131,31 +132,38 @@ if [[ "${tool}" == *"@"* ]]; then
         if [[ ! "${version}" =~ ^([1-9][0-9]*(\.[0-9]+(\.[0-9]+)?)?|0\.[1-9][0-9]*(\.[0-9]+)?|^0\.0\.[0-9]+)(-[0-9A-Za-z\.-]+)?(\+[0-9A-Za-z\.-]+)?$|^latest$ ]]; then
             bail "cache-cargo-install-action does not support non-semver version: '${version}'"
         fi
-        bail "cache-cargo-install-action does not support omitting patch/minor version yet: '${version}'"
+        fetch='1'
     fi
 else
     version="latest"
 fi
 
-case "${version}" in
-    latest)
-        if ! type -P jq &>/dev/null || ! type -P curl &>/dev/null; then
-            case "${base_distro}" in
-                debian | alpine) sys_install ca-certificates curl jq ;;
-                fedora)
-                    if [[ "${dnf}" == "yum" ]]; then
-                        # On RHEL7-based distribution jq requires EPEL
-                        sys_install ca-certificates curl epel-release
-                        sys_install jq --enablerepo=epel
-                    else
-                        sys_install ca-certificates curl jq
-                    fi
-                    ;;
-            esac
-        fi
-        version=$(retry curl --proto '=https' --tlsv1.2 -fsSL --retry 10 "https://crates.io/api/v1/crates/${tool}" | jq -r '.crate.max_stable_version')
-        ;;
-esac
+if [[ "${version}" == "latest" ]] || [[ -n "${fetch}" ]]; then
+    if ! type -P jq &>/dev/null || ! type -P curl &>/dev/null; then
+        case "${base_distro}" in
+            debian | alpine) sys_install ca-certificates curl jq ;;
+            fedora)
+                if [[ "${dnf}" == "yum" ]]; then
+                    # On RHEL7-based distribution jq requires EPEL
+                    sys_install ca-certificates curl epel-release
+                    sys_install jq --enablerepo=epel
+                else
+                    sys_install ca-certificates curl jq
+                fi
+                ;;
+        esac
+    fi
+    crate_info=$(retry curl --proto '=https' --tlsv1.2 -fsSL --retry 10 "https://crates.io/api/v1/crates/${tool}")
+    case "${version}" in
+        latest) version=$(jq <<<"${crate_info}" -r '.crate.max_stable_version') ;;
+        *)
+            if [[ ! "${version}" =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
+                bail "cache-cargo-install-action does not support non-semver version: '${version}'"
+            fi
+            version=$(jq <<<"${crate_info}" -r ".versions[] | select(.num | startswith(\"${version}.\")) | select(.yanked == false) | .num" | head -1)
+            ;;
+    esac
+fi
 
 bin_dir="${RUNNER_TOOL_CACHE}/${tool}/bin"
 echo "${bin_dir}" >>"${GITHUB_PATH}"

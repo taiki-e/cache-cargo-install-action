@@ -170,7 +170,7 @@ if [[ "${version}" == "latest" ]] || [[ -n "${fetch}" ]]; then
                 break
             done
             if [[ -z "${full_version:-}" ]]; then
-                bail "no version match with '${version}'"
+                bail "no stable version match with '${version}.*'"
             fi
             version="${full_version}"
             ;;

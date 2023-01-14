@@ -110,9 +110,9 @@ To use this action in self-hosted runners or in containers, you will need to ins
 - [setup-cross-toolchain-action]: GitHub Action for setup toolchains for cross compilation and cross testing for Rust.
 
 [create-gh-release-action]: https://github.com/taiki-e/create-gh-release-action
+[install-action]: https://github.com/taiki-e/install-action
 [setup-cross-toolchain-action]: https://github.com/taiki-e/setup-cross-toolchain-action
 [upload-rust-binary-action]: https://github.com/taiki-e/upload-rust-binary-action
-[install-action]: https://github.com/taiki-e/install-action
 
 ## License
 

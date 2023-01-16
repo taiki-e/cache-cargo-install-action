@@ -6,7 +6,9 @@
 GitHub Action for `cargo install` with cache.
 
 This installs the specified crate using `cargo install` and caches the installed binaries using [actions/cache].
+If binaries for the specified crate are already cached, restore the cache instead of calling `cargo install`.
 
+This was originally intended for installing crates that are not supported by [install-action].
 For performance and robustness, we recommend using [install-action] if the tool is supported by [install-action].
 
 - [Usage](#usage)

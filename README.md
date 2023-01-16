@@ -5,7 +5,8 @@
 
 GitHub Action for `cargo install` with cache.
 
-This is intended for installing crates that are not supported by [install-action].
+This installs the specified crate using `cargo install` and caches the installed binaries using [actions/cache].
+
 For performance and robustness, we recommend using [install-action] if the tool is supported by [install-action].
 
 - [Usage](#usage)
@@ -116,6 +117,7 @@ To use this action in self-hosted runners or in containers, you will need to ins
 - [upload-rust-binary-action]: GitHub Action for building and uploading Rust binary to GitHub Releases.
 - [setup-cross-toolchain-action]: GitHub Action for setup toolchains for cross compilation and cross testing for Rust.
 
+[actions/cache]: https://github.com/actions/cache
 [create-gh-release-action]: https://github.com/taiki-e/create-gh-release-action
 [install-action]: https://github.com/taiki-e/install-action
 [setup-cross-toolchain-action]: https://github.com/taiki-e/setup-cross-toolchain-action

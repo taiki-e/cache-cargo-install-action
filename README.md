@@ -26,6 +26,8 @@ For performance and robustness, we recommend using [install-action] if the tool 
 
 ### Example workflow
 
+To install the latest version:
+
 ```yaml
 - uses: taiki-e/cache-cargo-install-action@v1
   with:

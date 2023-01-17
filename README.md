@@ -106,7 +106,7 @@ The interface of this action is a subset of the interface of [install-action], s
 ## Compatibility
 
 This action has been tested for GitHub-hosted runners (Ubuntu, macOS, Windows) and containers (Ubuntu, Debian, Alpine, Fedora, CentOS, Rocky).
-To use this action in self-hosted runners or in containers, you will need to install at least the following:
+To use this action in self-hosted runners or in containers, at least the following tools are required:
 
 - bash
 - GNU tar

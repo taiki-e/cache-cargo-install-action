@@ -25,6 +25,6 @@ runs:
         path: ${{ steps.pre.outputs.path }}
         key: ${{ steps.pre.outputs.key }}
     - name: Install ${{ inputs.tool }}
-      run: cargo install -f "${{ steps.pre.outputs.tool }}" --root "${RUNNER_TOOL_CACHE}/${{ steps.pre.outputs.tool }}" --locked --version "${{ steps.pre.outputs.version }}"
+      run: CARGO_NET_RETRY=10 cargo install -f "${{ steps.pre.outputs.tool }}" --root "${RUNNER_TOOL_CACHE}/${{ steps.pre.outputs.tool }}" --locked --version "${{ steps.pre.outputs.version }}"
       shell: bash
       if: steps.cache.outputs.cache-hit != 'true'

@@ -3,7 +3,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 retry() {
-    for i in {1..5}; do
+    for i in {1..10}; do
         if "$@"; then
             return 0
         else

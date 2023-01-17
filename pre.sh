@@ -155,7 +155,12 @@ if [[ "${version}" == "latest" ]] || [[ -n "${fetch}" ]]; then
     fi
     crate_info=$(retry curl --proto '=https' --tlsv1.2 -fsSL --retry 10 "https://crates.io/api/v1/crates/${tool}")
     case "${version}" in
-        latest) version=$(jq <<<"${crate_info}" -r '.crate.max_stable_version') ;;
+        latest)
+            version=$(jq <<<"${crate_info}" -r '.crate.max_stable_version')
+            if [[ "${version}" == "null" ]]; then
+                bail "no stable version found for ${tool}; if you want to install a pre-release version, please specify the full version"
+            fi
+            ;;
         *)
             if [[ ! "${version}" =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
                 bail "cache-cargo-install-action does not support non-semver version: '${version}'"
@@ -170,7 +175,7 @@ if [[ "${version}" == "latest" ]] || [[ -n "${fetch}" ]]; then
                 break
             done
             if [[ -z "${full_version:-}" ]]; then
-                bail "no stable version match with '${version}.*'"
+                bail "no stable version  found for ${tool} that match with '${version}.*'; if you want to install a pre-release version, please specify the full version"
             fi
             version="${full_version}"
             ;;

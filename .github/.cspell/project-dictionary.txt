@@ -1,7 +1,6 @@
 binstall
 distro
 doas
-Dpkg
 enablerepo
 epel
 libc

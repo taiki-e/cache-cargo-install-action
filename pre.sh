@@ -36,9 +36,9 @@ apt_install() {
 }
 apk_install() {
     if type -P doas &>/dev/null; then
-        doas apk add --no-cache "$@"
+        doas apk --no-cache add "$@"
     else
-        apk add --no-cache "$@"
+        apk --no-cache add "$@"
     fi
 }
 dnf_install() {

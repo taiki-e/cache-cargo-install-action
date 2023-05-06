@@ -58,6 +58,7 @@ sys_install() {
 
 # Inputs
 tool="${INPUT_TOOL:?}"
+locked="${INPUT_LOCKED:?}"
 
 # Refs: https://github.com/rust-lang/rustup/blob/HEAD/rustup-init.sh
 base_distro=""
@@ -138,6 +139,18 @@ else
     version="latest"
 fi
 
+case "${locked}" in
+    true)
+        locked="--locked"
+        locked_key=''
+        ;;
+    false)
+        locked=''
+        locked_key="-locked-false"
+        ;;
+    *) bail "'locked' input option must be 'true' or 'false': '${locked}'" ;;
+esac
+
 if [[ "${version}" == "latest" ]] || [[ -n "${fetch}" ]]; then
     if ! type -P jq &>/dev/null || ! type -P curl &>/dev/null; then
         case "${base_distro}" in
@@ -188,6 +201,7 @@ echo "${bin_dir}" >>"${GITHUB_PATH}"
 cat >>"${GITHUB_OUTPUT}" <<EOF
 tool=${tool}
 version=${version}
-key=${tool}-${version}-${host_arch}-${host_os}
+key=${tool}-${version}-${host_arch}-${host_os}${locked_key}
 path=${bin_dir}
+locked=${locked}
 EOF

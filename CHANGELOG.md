@@ -10,6 +10,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 ## [Unreleased]
 
+- Add `locked` input option (default to `true`) to allow choice of whether or not to use `--locked` flag.
+
 ## [1.1.1] - 2023-01-14
 
 - Prevent pre-release version from being installed as the latest version when patch/minor version is omitted.

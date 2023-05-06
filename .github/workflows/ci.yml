@@ -49,6 +49,7 @@ jobs:
       - uses: ./
         with:
           tool: ${{ matrix.tool1 || 'cargo-hack' }}
+          locked: false
       - run: cargo hack --version
       - uses: ./
         with:
@@ -97,7 +98,9 @@ jobs:
             dnf=microdnf
           fi
           # tar and gzip are required for actions/checkout on rockylinux:*-minimal
-          $dnf install -y cargo tar gzip
+          $dnf install -y tar gzip
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain stable
+          echo "$HOME/.cargo/bin" >>"${GITHUB_PATH}"
         if: startsWith(matrix.container, 'fedora') || startsWith(matrix.container, 'rockylinux')
       - name: Install requirements (centos)
         run: |
@@ -118,6 +121,7 @@ jobs:
       - uses: ./
         with:
           tool: ${{ matrix.tool1 || 'cargo-hack' }}
+          locked: false
       - run: cargo hack --version
       - uses: ./
         with:

@@ -5,6 +5,10 @@ inputs:
   tool:
     description: Crate to install
     required: true
+  locked:
+    description: Use --locked flag
+    required: false
+    default: 'true'
 
 # Note:
 # - inputs.* should be manually mapped to INPUT_* due to https://github.com/actions/runner/issues/665
@@ -18,6 +22,7 @@ runs:
       shell: bash
       env:
         INPUT_TOOL: ${{ inputs.tool }}
+        INPUT_LOCKED: ${{ inputs.locked }}
     - name: Restore Cache
       id: cache
       uses: actions/cache@v3
@@ -25,6 +30,6 @@ runs:
         path: ${{ steps.pre.outputs.path }}
         key: ${{ steps.pre.outputs.key }}
     - name: Install ${{ inputs.tool }}
-      run: CARGO_NET_RETRY=10 cargo install -f "${{ steps.pre.outputs.tool }}" --root "${RUNNER_TOOL_CACHE}/${{ steps.pre.outputs.tool }}" --locked --version "${{ steps.pre.outputs.version }}"
+      run: CARGO_NET_RETRY=10 cargo install -f "${{ steps.pre.outputs.tool }}" --root "${RUNNER_TOOL_CACHE}/${{ steps.pre.outputs.tool }}" ${{ steps.pre.outputs.locked }} --version "${{ steps.pre.outputs.version }}"
       shell: bash
       if: steps.cache.outputs.cache-hit != 'true'

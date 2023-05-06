@@ -23,9 +23,10 @@ For performance and robustness, we recommend using [install-action] if the tool 
 
 ### Inputs
 
-| Name | Required | Description         | Type    | Default |
-| ---- |:--------:| ------------------- | ------- | ------- |
-| tool | **true** | Crate to install    | String  |         |
+| Name   | Required | Description         | Type    | Default |
+| ------ |:--------:| ------------------- | ------- | ------- |
+| tool   | **true** | Crate to install    | String  |         |
+| locked | false    | Use `--locked` flag | Boolean | true    |
 
 ### Example workflow
 

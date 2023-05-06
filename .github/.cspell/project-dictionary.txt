@@ -2,6 +2,7 @@ binstall
 distro
 doas
 enablerepo
+endgroup
 epel
 libc
 microdnf

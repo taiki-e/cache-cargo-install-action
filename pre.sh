@@ -154,8 +154,13 @@ esac
 if [[ "${version}" == "latest" ]] || [[ -n "${fetch}" ]]; then
     if ! type -P jq &>/dev/null || ! type -P curl &>/dev/null; then
         case "${base_distro}" in
-            debian | alpine) sys_install ca-certificates curl jq ;;
+            debian | alpine)
+                echo "::group::Install jq and curl"
+                sys_install ca-certificates curl jq
+                echo "::endgroup::"
+                ;;
             fedora)
+                echo "::group::Install jq and curl"
                 if [[ "${dnf}" == "yum" ]]; then
                     # On RHEL7-based distribution jq requires EPEL
                     sys_install ca-certificates curl epel-release
@@ -163,6 +168,7 @@ if [[ "${version}" == "latest" ]] || [[ -n "${fetch}" ]]; then
                 else
                     sys_install ca-certificates curl jq
                 fi
+                echo "::endgroup::"
                 ;;
         esac
     fi

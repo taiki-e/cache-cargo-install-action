@@ -98,7 +98,7 @@ jobs:
             dnf=microdnf
           fi
           # tar and gzip are required for actions/checkout on rockylinux:*-minimal
-          $dnf install -y tar gzip
+          $dnf install -y gcc tar gzip
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain stable
           echo "$HOME/.cargo/bin" >>"${GITHUB_PATH}"
         if: startsWith(matrix.container, 'fedora') || startsWith(matrix.container, 'rockylinux')

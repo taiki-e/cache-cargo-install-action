@@ -10,6 +10,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 ## [Unreleased]
 
+## [1.2.0] - 2023-05-06
+
 - Add `locked` input option (default to `true`) to allow choice of whether or not to use `--locked` flag.
 
 ## [1.1.1] - 2023-01-14
@@ -38,7 +40,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 Initial release
 
-[Unreleased]: https://github.com/taiki-e/cache-cargo-install-action/compare/v1.1.1...HEAD
+[Unreleased]: https://github.com/taiki-e/cache-cargo-install-action/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/taiki-e/cache-cargo-install-action/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/taiki-e/cache-cargo-install-action/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/taiki-e/cache-cargo-install-action/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/taiki-e/cache-cargo-install-action/compare/v1.0.0...v1.0.1

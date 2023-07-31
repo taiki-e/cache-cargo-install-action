@@ -10,6 +10,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 ## [Unreleased]
 
+- Improve performance and robustness for cases where the host environment lacks the packages required for installation, such as containers or self-hosted runners.
+
 ## [1.2.0] - 2023-05-06
 
 - Add `locked` input option (default to `true`) to allow choice of whether or not to use `--locked` flag.

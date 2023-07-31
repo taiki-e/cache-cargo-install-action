@@ -30,9 +30,9 @@ apt_install() {
         apt_update
     fi
     if type -P sudo &>/dev/null; then
-        retry sudo apt-get -o Acquire::Retries=10 -qq -o Dpkg::Use-Pty=0 install -y --no-install-recommends "$@"
+        retry sudo apt-get -o Acquire::Retries=10 -o Dpkg::Use-Pty=0 install -y --no-install-recommends "$@"
     else
-        retry apt-get -o Acquire::Retries=10 -qq -o Dpkg::Use-Pty=0 install -y --no-install-recommends "$@"
+        retry apt-get -o Acquire::Retries=10 -o Dpkg::Use-Pty=0 install -y --no-install-recommends "$@"
     fi
 }
 apk_install() {
@@ -155,19 +155,26 @@ esac
 if [[ "${version}" == "latest" ]] || [[ -n "${fetch}" ]]; then
     if ! type -P jq &>/dev/null || ! type -P curl &>/dev/null; then
         case "${base_distro}" in
-            debian | alpine)
-                echo "::group::Install jq and curl"
-                sys_install ca-certificates curl jq
-                echo "::endgroup::"
-                ;;
-            fedora)
-                echo "::group::Install jq and curl"
-                if [[ "${dnf}" == "yum" ]]; then
+            debian | fedora | alpine)
+                echo "::group::Install packages required for installation (jq and/or curl)"
+                sys_packages=()
+                if ! type -P curl &>/dev/null; then
+                    sys_packages+=(ca-certificates curl)
+                fi
+                if [[ "${dnf:-}" == "yum" ]]; then
                     # On RHEL7-based distribution jq requires EPEL
-                    sys_install ca-certificates curl epel-release
-                    sys_install jq --enablerepo=epel
+                    if ! type -P jq &>/dev/null; then
+                        sys_packages+=(epel-release)
+                        sys_install "${sys_packages[@]}"
+                        sys_install jq --enablerepo=epel
+                    else
+                        sys_install "${sys_packages[@]}"
+                    fi
                 else
-                    sys_install ca-certificates curl jq
+                    if ! type -P jq &>/dev/null; then
+                        sys_packages+=(jq)
+                    fi
+                    sys_install "${sys_packages[@]}"
                 fi
                 echo "::endgroup::"
                 ;;

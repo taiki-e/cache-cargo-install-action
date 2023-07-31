@@ -4,7 +4,6 @@ doas
 enablerepo
 endgroup
 epel
-libc
 microdnf
 rockylinux
 startswith

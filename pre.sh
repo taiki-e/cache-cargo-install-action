@@ -73,14 +73,14 @@ case "$(uname -s)" in
             host_os="linux-gnu-${host_glibc_version}"
         fi
         if grep -q '^ID_LIKE=' /etc/os-release; then
-            base_distro="$(grep '^ID_LIKE=' /etc/os-release | sed 's/^ID_LIKE=//')"
+            base_distro=$(grep '^ID_LIKE=' /etc/os-release | sed 's/^ID_LIKE=//')
             case "${base_distro}" in
                 *debian*) base_distro=debian ;;
                 *alpine*) base_distro=alpine ;;
                 *fedora*) base_distro=fedora ;;
             esac
         else
-            base_distro="$(grep '^ID=' /etc/os-release | sed 's/^ID=//')"
+            base_distro=$(grep '^ID=' /etc/os-release | sed 's/^ID=//')
         fi
         case "${base_distro}" in
             fedora)

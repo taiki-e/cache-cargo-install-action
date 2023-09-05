@@ -1,3 +1,4 @@
+almalinux
 binstall
 distro
 doas
@@ -5,6 +6,5 @@ enablerepo
 endgroup
 epel
 microdnf
-rockylinux
 startswith
 xscale

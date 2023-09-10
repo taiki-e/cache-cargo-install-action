@@ -78,21 +78,15 @@ jobs:
     timeout-minutes: 60
     container: ${{ matrix.container }}
     steps:
-      - name: Install requirements (ubuntu)
-        run: |
-          set -euxo pipefail
-          apt-get -o Acquire::Retries=10 -qq update
-          apt-get -o Acquire::Retries=10 -o Dpkg::Use-Pty=0 install -y --no-install-recommends cargo
-        if: startsWith(matrix.container, 'ubuntu')
-      - name: Install requirements (debian)
+      - name: Install requirements (ubuntu/debian)
         run: |
           set -euxo pipefail
           apt-get -o Acquire::Retries=10 -qq update
           apt-get -o Acquire::Retries=10 -o Dpkg::Use-Pty=0 install -y --no-install-recommends ca-certificates curl gcc libc6-dev
-          curl --proto '=https' --tlsv1.2 -fsS --retry 10 https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain stable
+          curl --proto '=https' --tlsv1.2 -fsSL --retry 10 https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain stable
           echo "$HOME/.cargo/bin" >>"${GITHUB_PATH}"
           apt-get -qq -o Dpkg::Use-Pty=0 remove -y curl
-        if: startsWith(matrix.container, 'debian')
+        if: startsWith(matrix.container, 'ubuntu') || startsWith(matrix.container, 'debian')
       - name: Install requirements (fedora/almalinux/centos)
         run: |
           set -euxo pipefail
@@ -104,7 +98,7 @@ jobs:
           else
             yum install -y gcc
           fi
-          curl --proto '=https' --tlsv1.2 -fsS --retry 10 https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain stable
+          curl --proto '=https' --tlsv1.2 -fsSL --retry 10 https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain stable
           echo "$HOME/.cargo/bin" >>"${GITHUB_PATH}"
         if: startsWith(matrix.container, 'fedora') || startsWith(matrix.container, 'almalinux') || startsWith(matrix.container, 'centos')
       - name: Install requirements (alpine)

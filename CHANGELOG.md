@@ -10,6 +10,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 ## [Unreleased]
 
+- Fix potential bug on Windows self-hosted runner.
+
 ## [1.2.1] - 2023-07-31
 
 - Improve performance and robustness for cases where the host environment lacks the packages required for installation, such as containers or self-hosted runners.

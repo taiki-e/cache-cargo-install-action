@@ -7,5 +7,6 @@ enablerepo
 endgroup
 epel
 microdnf
+pwsh
 startswith
 xscale

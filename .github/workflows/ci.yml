@@ -54,7 +54,25 @@ jobs:
       - uses: ./
         with:
           tool: ${{ matrix.tool2 || 'cargo-llvm-cov' }}
-      - run: cargo llvm-cov --version
+      # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsshell
+      - name: Test bash
+        run: cargo llvm-cov --version
+        shell: bash
+      - name: Test sh
+        run: cargo llvm-cov --version
+        shell: sh
+        if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos')
+      - name: Test pwsh
+        run: cargo llvm-cov --version
+        shell: pwsh
+      - name: Test powershell
+        run: cargo llvm-cov --version
+        shell: powershell
+        if: startsWith(matrix.os, 'windows')
+      - name: Test cmd
+        run: cargo llvm-cov --version
+        shell: cmd
+        if: startsWith(matrix.os, 'windows')
 
   test-container:
     strategy:

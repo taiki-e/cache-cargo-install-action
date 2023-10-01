@@ -101,7 +101,7 @@ jobs:
           set -eEuxo pipefail
           apt-get -o Acquire::Retries=10 -qq update
           apt-get -o Acquire::Retries=10 -o Dpkg::Use-Pty=0 install -y --no-install-recommends ca-certificates curl gcc libc6-dev
-          curl --proto '=https' --tlsv1.2 -fsSL --retry 10 https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain stable
+          curl --proto '=https' --tlsv1.2 -fsSL --retry 10 https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain stable --no-modify-path
           echo "$HOME/.cargo/bin" >>"${GITHUB_PATH}"
           apt-get -qq -o Dpkg::Use-Pty=0 remove -y curl
         if: startsWith(matrix.container, 'ubuntu') || startsWith(matrix.container, 'debian')
@@ -116,7 +116,7 @@ jobs:
           else
             yum install -y gcc
           fi
-          curl --proto '=https' --tlsv1.2 -fsSL --retry 10 https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain stable
+          curl --proto '=https' --tlsv1.2 -fsSL --retry 10 https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain stable --no-modify-path
           echo "$HOME/.cargo/bin" >>"${GITHUB_PATH}"
         if: startsWith(matrix.container, 'fedora') || startsWith(matrix.container, 'almalinux') || startsWith(matrix.container, 'centos')
       - name: Install requirements (alpine)

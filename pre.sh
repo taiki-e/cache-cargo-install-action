@@ -29,15 +29,14 @@ download_and_checksum() {
     info "downloading ${url}"
     retry curl --proto '=https' --tlsv1.2 -fsSL --retry 10 "${url}" -o tmp
     if [[ -n "${checksum}" ]]; then
-        echo "${checksum} *tmp" >tmp.sha256sum
         if type -P sha256sum &>/dev/null; then
             info "verifying sha256 checksum for $(basename "${url}")"
-            sha256sum -c tmp.sha256sum >/dev/null
+            echo "${checksum} *tmp" | sha256sum -c - >/dev/null
         elif type -P shasum &>/dev/null; then
             info "verifying sha256 checksum for $(basename "${url}")"
             # GitHub-hosted macOS runner does not install GNU Coreutils by default.
             # https://github.com/actions/runner-images/issues/90
-            shasum -a 256 -c tmp.sha256sum >/dev/null
+            echo "${checksum} *tmp" | shasum -a 256 -c - >/dev/null
         else
             warn "checksum requires 'sha256sum' or 'shasum' command; consider installing one of them; skipped checksum for $(basename "${url}")"
         fi

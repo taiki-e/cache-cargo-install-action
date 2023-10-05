@@ -24,22 +24,17 @@ info() {
     echo "info: $*"
 }
 download_and_checksum() {
-    local url="$1"
-    local checksum="$2"
-    info "downloading ${url}"
+    local url="${1:?}"
+    local checksum="${2:?}"
     retry curl --proto '=https' --tlsv1.2 -fsSL --retry 10 "${url}" -o tmp
-    if [[ -n "${checksum}" ]]; then
-        if type -P sha256sum &>/dev/null; then
-            info "verifying sha256 checksum for $(basename "${url}")"
-            echo "${checksum} *tmp" | sha256sum -c - >/dev/null
-        elif type -P shasum &>/dev/null; then
-            info "verifying sha256 checksum for $(basename "${url}")"
-            # GitHub-hosted macOS runner does not install GNU Coreutils by default.
-            # https://github.com/actions/runner-images/issues/90
-            echo "${checksum} *tmp" | shasum -a 256 -c - >/dev/null
-        else
-            warn "checksum requires 'sha256sum' or 'shasum' command; consider installing one of them; skipped checksum for $(basename "${url}")"
-        fi
+    if type -P sha256sum &>/dev/null; then
+        echo "${checksum} *tmp" | sha256sum -c - >/dev/null
+    elif type -P shasum &>/dev/null; then
+        # GitHub-hosted macOS runner does not install GNU Coreutils by default.
+        # https://github.com/actions/runner-images/issues/90
+        echo "${checksum} *tmp" | shasum -a 256 -c - >/dev/null
+    else
+        warn "checksum requires 'sha256sum' or 'shasum' command; consider installing one of them; skipped checksum for $(basename "${url}")"
     fi
 }
 apt_update() {

@@ -56,7 +56,9 @@ apt_install() {
     fi
 }
 apk_install() {
-    if type -P doas &>/dev/null; then
+    if type -P sudo &>/dev/null; then
+        sudo apk --no-cache add "$@"
+    elif type -P doas &>/dev/null; then
         doas apk --no-cache add "$@"
     else
         apk --no-cache add "$@"

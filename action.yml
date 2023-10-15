@@ -9,6 +9,18 @@ inputs:
     description: Use --locked flag
     required: false
     default: 'true'
+  git:
+    description: >
+      Install from the specified Git URL
+
+      This currently requires one of 'tag' or 'rev' input option.
+    required: false
+  tag:
+    description: Tag to use when installing from git
+    required: false
+  rev:
+    description: Specific commit to use when installing from git
+    required: false
 
 # Note:
 # - inputs.* should be manually mapped to INPUT_* due to https://github.com/actions/runner/issues/665
@@ -23,6 +35,9 @@ runs:
       env:
         INPUT_TOOL: ${{ inputs.tool }}
         INPUT_LOCKED: ${{ inputs.locked }}
+        INPUT_GIT: ${{ inputs.git }}
+        INPUT_TAG: ${{ inputs.tag }}
+        INPUT_REV: ${{ inputs.rev }}
     - name: Restore Cache
       id: cache
       uses: actions/cache@v3
@@ -30,6 +45,17 @@ runs:
         path: ${{ steps.pre.outputs.path }}
         key: ${{ steps.pre.outputs.key }}
     - name: Install ${{ inputs.tool }}
-      run: CARGO_NET_RETRY=10 cargo install -f "${{ steps.pre.outputs.tool }}" --root "${RUNNER_TOOL_CACHE}/${{ steps.pre.outputs.tool }}" ${{ steps.pre.outputs.locked }} --version "${{ steps.pre.outputs.version }}"
+      run: |
+        export CARGO_NET_RETRY=10
+        args=(-f "${{ steps.pre.outputs.tool }}" --root "${RUNNER_TOOL_CACHE}/${{ steps.pre.outputs.tool }}" ${{ steps.pre.outputs.locked }})
+        if [[ -n "${{ steps.pre.outputs.git }}" ]]; then
+          if [[ -n "${{ steps.pre.outputs.tag }}" ]]; then
+            cargo install "${args[@]}" --git "${{ steps.pre.outputs.git }}" --tag "${{ steps.pre.outputs.tag }}"
+          else
+            cargo install "${args[@]}" --git "${{ steps.pre.outputs.git }}" --rev "${{ steps.pre.outputs.rev }}"
+          fi
+        else
+          cargo install "${args[@]}" --version "${{ steps.pre.outputs.version }}"
+        fi
       shell: bash
       if: steps.cache.outputs.cache-hit != 'true'

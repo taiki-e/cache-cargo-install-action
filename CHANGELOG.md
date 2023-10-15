@@ -10,6 +10,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 ## [Unreleased]
 
+- Add `git` input option to install from the specified Git URL.
+
 ## [1.2.2] - 2023-09-16
 
 - Fix potential bug on Windows self-hosted runner.

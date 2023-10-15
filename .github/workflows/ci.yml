@@ -56,6 +56,18 @@ jobs:
       - uses: ./
         with:
           tool: ${{ matrix.tool2 || 'cargo-llvm-cov' }}
+      - uses: ./
+        with:
+          tool: parse-changelog
+          git: https://github.com/taiki-e/parse-changelog
+          rev: d231414
+      - run: parse-changelog --version
+      - uses: ./
+        with:
+          tool: cargo-minimal-versions
+          git: https://github.com/taiki-e/cargo-minimal-versions
+          tag: v0.1.19
+      - run: cargo minimal-versions --version
       # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsshell
       - name: Test bash
         run: cargo llvm-cov --version

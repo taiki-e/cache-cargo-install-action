@@ -82,6 +82,9 @@ sys_install() {
 # Inputs
 tool="${INPUT_TOOL:?}"
 locked="${INPUT_LOCKED:?}"
+git="${INPUT_GIT:-}"
+tag="${INPUT_TAG:-}"
+rev="${INPUT_REV:-}"
 
 # Refs: https://github.com/rust-lang/rustup/blob/HEAD/rustup-init.sh
 base_distro=""
@@ -150,6 +153,9 @@ if [[ "${tool}" == *","* ]]; then
 fi
 fetch=''
 if [[ "${tool}" == *"@"* ]]; then
+    if [[ -n "${git}" ]]; then
+        bail "<tool>@<version> syntax is not supported with 'git' input option"
+    fi
     version="${tool#*@}"
     tool="${tool%@*}"
     if [[ ! "${version}" =~ ^([1-9][0-9]*\.[0-9]+\.[0-9]+|0\.[1-9][0-9]*\.[0-9]+|^0\.0\.[0-9]+)(-[0-9A-Za-z\.-]+)?(\+[0-9A-Za-z\.-]+)?$|^latest$ ]]; then
@@ -158,6 +164,14 @@ if [[ "${tool}" == *"@"* ]]; then
         fi
         fetch='1'
     fi
+elif [[ -n "${git}" ]]; then
+    if [[ -n "${tag}" ]] && [[ -n "${rev}" ]]; then
+        bail "'tag' and 'rev' input options cannot be used together"
+    fi
+    if [[ -z "${tag}" ]] && [[ -z "${rev}" ]]; then
+        bail "'git' input option currently requires one of 'tag' or 'rev' input option"
+    fi
+    version=""
 else
     version="latest"
 fi
@@ -288,10 +302,18 @@ fi
 bin_dir="${RUNNER_TOOL_CACHE}/${tool}/bin"
 echo "${bin_dir}" >>"${GITHUB_PATH}"
 
+if [[ -n "${git}" ]]; then
+    key="${tool}-git-${tag:+"tag-${tag}"}${rev:+"rev-${rev}"}-${host_arch}-${host_os}${locked_key}"
+else
+    key="${tool}-${version}-${host_arch}-${host_os}${locked_key}"
+fi
 cat >>"${GITHUB_OUTPUT}" <<EOF
 tool=${tool}
 version=${version}
-key=${tool}-${version}-${host_arch}-${host_os}${locked_key}
+key=${key}
 path=${bin_dir}
 locked=${locked}
+git=${git}
+tag=${tag}
+rev=${rev}
 EOF

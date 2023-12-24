@@ -38,7 +38,6 @@ androideabi
 armeb
 armebv
 armv
-asmjs
 atmega
 bpfeb
 bpfel
@@ -58,6 +57,7 @@ gnuspe
 gnux
 illumos
 imac
+imafc
 libnx
 loongarch
 macabi
@@ -100,16 +100,17 @@ builtins
 bytecount
 canonicalize
 cfgs
+compat
 concat
 ctypes
 dealloc
 deque
-docsrs
 doctest
 doctests
 hasher
 idents
 impls
+incompat
 inlateout
 intrinsics
 lateout

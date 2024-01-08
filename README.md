@@ -1,7 +1,7 @@
 # cache-cargo-install-action
 
 [![release](https://img.shields.io/github/release/taiki-e/cache-cargo-install-action?style=flat-square&logo=github)](https://github.com/taiki-e/cache-cargo-install-action/releases/latest)
-[![build status](https://img.shields.io/github/actions/workflow/status/taiki-e/cache-cargo-install-action/ci.yml?branch=main&style=flat-square&logo=github)](https://github.com/taiki-e/cache-cargo-install-action/actions)
+[![github actions](https://img.shields.io/github/actions/workflow/status/taiki-e/cache-cargo-install-action/ci.yml?branch=main&style=flat-square&logo=github)](https://github.com/taiki-e/cache-cargo-install-action/actions)
 
 GitHub Action for `cargo install` with cache.
 

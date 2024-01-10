@@ -43,9 +43,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
+      - uses: taiki-e/github-actions/checkout@main
       - name: Install Rust
         run: rustup update stable --no-self-update
       - uses: ./
@@ -125,8 +123,7 @@ jobs:
           if type -P dnf &>/dev/null; then
             dnf install -y gcc
           elif type -P microdnf &>/dev/null; then
-            # tar and gzip are required for actions/checkout on *-minimal images
-            microdnf install -y gcc tar gzip
+            microdnf install -y gcc
           else
             yum install -y gcc
           fi
@@ -134,12 +131,10 @@ jobs:
           echo "$HOME/.cargo/bin" >>"${GITHUB_PATH}"
         if: startsWith(matrix.container, 'fedora') || startsWith(matrix.container, 'almalinux') || startsWith(matrix.container, 'centos')
       - name: Install requirements (alpine)
-        run: apk --no-cache add bash cargo tar
+        run: apk --no-cache add bash cargo
         shell: sh
         if: startsWith(matrix.container, 'alpine')
-      - uses: actions/checkout@v3 # TODO: actions/checkout@v4 requires glibc 2.28+
-        with:
-          persist-credentials: false
+      - uses: taiki-e/github-actions/checkout@main
       - uses: ./
         with:
           tool: cargo-hack

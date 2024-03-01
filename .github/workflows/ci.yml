@@ -38,7 +38,8 @@ jobs:
           - os: ubuntu-20.04
             tool1: cargo-hack@0.5
             tool2: cargo-llvm-cov@0.4
-          - os: macos-11
+          - os: macos-12
+          - os: macos-14
           - os: windows-2019
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60

@@ -10,6 +10,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 ## [Unreleased]
 
+## [2.0.0] - 2024-04-26
+
 - Update `actions/cache` from 3 to 4.
 
   This [breaks compatibility with CentOS 7 and Ubuntu 18.04](https://github.com/actions/runner/issues/2906) so it is treated as a breaking change.
@@ -60,7 +62,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 Initial release
 
-[Unreleased]: https://github.com/taiki-e/cache-cargo-install-action/compare/v1.4.0...HEAD
+[Unreleased]: https://github.com/taiki-e/cache-cargo-install-action/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/taiki-e/cache-cargo-install-action/compare/v1.4.0...v2.0.0
 [1.4.0]: https://github.com/taiki-e/cache-cargo-install-action/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/taiki-e/cache-cargo-install-action/compare/v1.2.2...v1.3.0
 [1.2.2]: https://github.com/taiki-e/cache-cargo-install-action/compare/v1.2.1...v1.2.2

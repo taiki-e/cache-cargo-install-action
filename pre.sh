@@ -57,6 +57,9 @@ apt_install() {
 dnf_install() {
     retry _sudo "${dnf}" install -y "$@"
 }
+zypper_install() {
+    retry _sudo zypper install -y "$@"
+}
 pacman_install() {
     retry _sudo pacman -Sy --noconfirm "$@"
 }
@@ -73,6 +76,7 @@ sys_install() {
     case "${base_distro}" in
         debian) apt_install "$@" ;;
         fedora) dnf_install "$@" ;;
+        suse) zypper_install "$@" ;;
         arch) pacman_install "$@" ;;
         alpine) apk_install "$@" ;;
     esac
@@ -101,6 +105,7 @@ case "$(uname -s)" in
             case "${base_distro}" in
                 *debian*) base_distro=debian ;;
                 *fedora*) base_distro=fedora ;;
+                *suse*) base_distro=suse ;;
                 *arch*) base_distro=arch ;;
                 *alpine*) base_distro=alpine ;;
             esac
@@ -195,7 +200,7 @@ if [[ "${version}" == "latest" ]] || [[ -n "${fetch}" ]]; then
         linux*)
             if ! type -P jq &>/dev/null || ! type -P curl &>/dev/null; then
                 case "${base_distro}" in
-                    debian | fedora | arch | alpine)
+                    debian | fedora | suse | arch | alpine)
                         echo "::group::Install packages required for installation (jq and/or curl)"
                         sys_packages=()
                         if ! type -P curl &>/dev/null; then
@@ -218,7 +223,7 @@ if [[ "${version}" == "latest" ]] || [[ -n "${fetch}" ]]; then
                         fi
                         echo "::endgroup::"
                         ;;
-                    *) warn "cache-cargo-install-action requires jq and curl on non-Debian/Fedora/Arch/Alpine-based Linux" ;;
+                    *) warn "cache-cargo-install-action requires jq and curl on non-Debian/Fedora/SUSE/Arch/Alpine-based Linux" ;;
                 esac
             fi
             ;;

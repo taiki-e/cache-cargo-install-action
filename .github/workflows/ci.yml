@@ -103,6 +103,8 @@ jobs:
           - almalinux:8-minimal # glibc 2.28
           - almalinux:9 # glibc 2.34
           - almalinux:9-minimal # glibc 2.34
+          - opensuse/leap:latest # glibc 2.31 (as of leap 15.5)
+          - opensuse/tumbleweed:latest # glibc 2.39 (as of 2024-04-18)
           - archlinux:latest # glibc 2.38 (as of 2024-04-18)
           - alpine:latest # musl 1.2.4 (as of alpine 3.19)
     runs-on: ubuntu-latest
@@ -131,6 +133,12 @@ jobs:
           curl --proto '=https' --tlsv1.2 -fsSL --retry 10 https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain stable --no-modify-path
           echo "$HOME/.cargo/bin" >>"${GITHUB_PATH}"
         if: startsWith(matrix.container, 'fedora') || startsWith(matrix.container, 'almalinux')
+      - name: Install requirements (opensuse)
+        run: |
+          set -eEuxo pipefail
+          zypper install -y rustup
+          rustup toolchain add stable --profile minimal
+        if: startsWith(matrix.container, 'opensuse')
       - name: Install requirements (archlinux)
         run: pacman -Sy --noconfirm rust
         if: startsWith(matrix.container, 'archlinux')

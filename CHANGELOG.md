@@ -10,6 +10,10 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 ## [Unreleased]
 
+- Update `actions/cache` from 3 to 4.
+
+  This [breaks compatibility with CentOS 7 and Ubuntu 18.04](https://github.com/actions/runner/issues/2906) so it is treated as a breaking change.
+
 ## [1.4.0] - 2024-04-26
 
 - Improve support for Arch based containers/self-hosted runners.

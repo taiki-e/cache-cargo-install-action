@@ -40,8 +40,7 @@ runs:
         INPUT_REV: ${{ inputs.rev }}
     - name: Restore Cache
       id: cache
-      # TODO: currently, we cannot update to v4 because node20 doesn't work on CentOS 7: https://github.com/actions/runner/issues/2906
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ${{ steps.pre.outputs.path }}
         key: ${{ steps.pre.outputs.key }}

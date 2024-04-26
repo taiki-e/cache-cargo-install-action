@@ -12,7 +12,7 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 ## [2.0.0] - 2024-04-26
 
-- Update `actions/cache` from 3 to 4.
+- Update `actions/cache` from 3 to 4. ([#3](https://github.com/taiki-e/cache-cargo-install-action/pull/3))
 
   This [breaks compatibility with CentOS 7 and Ubuntu 18.04](https://github.com/actions/runner/issues/2906) so it is treated as a breaking change.
 

@@ -54,6 +54,12 @@ apt_install() {
     fi
     retry _sudo apt-get -o Acquire::Retries=10 -o Dpkg::Use-Pty=0 install -y --no-install-recommends "$@"
 }
+dnf_install() {
+    retry _sudo "${dnf}" install -y "$@"
+}
+pacman_install() {
+    retry _sudo pacman -Sy --noconfirm "$@"
+}
 apk_install() {
     if type -P sudo &>/dev/null; then
         sudo apk --no-cache add "$@"
@@ -63,14 +69,12 @@ apk_install() {
         apk --no-cache add "$@"
     fi
 }
-dnf_install() {
-    retry _sudo "${dnf}" install -y "$@"
-}
 sys_install() {
     case "${base_distro}" in
         debian) apt_install "$@" ;;
-        alpine) apk_install "$@" ;;
         fedora) dnf_install "$@" ;;
+        arch) pacman_install "$@" ;;
+        alpine) apk_install "$@" ;;
     esac
 }
 
@@ -93,14 +97,15 @@ case "$(uname -s)" in
             host_os="linux-gnu-${host_glibc_version}"
         fi
         if grep -q '^ID_LIKE=' /etc/os-release; then
-            base_distro=$(grep '^ID_LIKE=' /etc/os-release | sed 's/^ID_LIKE=//')
+            base_distro=$(grep '^ID_LIKE=' /etc/os-release | cut -d= -f2)
             case "${base_distro}" in
                 *debian*) base_distro=debian ;;
-                *alpine*) base_distro=alpine ;;
                 *fedora*) base_distro=fedora ;;
+                *arch*) base_distro=arch ;;
+                *alpine*) base_distro=alpine ;;
             esac
         else
-            base_distro=$(grep '^ID=' /etc/os-release | sed 's/^ID=//')
+            base_distro=$(grep '^ID=' /etc/os-release | cut -d= -f2)
         fi
         case "${base_distro}" in
             fedora)
@@ -126,19 +131,18 @@ case "$(uname -s)" in
 esac
 case "$(uname -m)" in
     aarch64 | arm64) host_arch="aarch64" ;;
-    xscale | arm | armv[6-9]l)
+    xscale | arm | armv*l)
         # Ignore arm for now, as we need to consider the version and whether hard-float is supported.
         # https://github.com/rust-lang/rustup/pull/593
         # https://github.com/cross-rs/cross/pull/1018
         # Does it seem only armv7l+ is supported?
-        # https://github.com/actions/runner/blob/caec043085990710070108f375cd0aeab45e1017/src/Misc/externals.sh#L174
+        # https://github.com/actions/runner/blob/v2.315.0/src/Misc/externals.sh#L189
         # https://github.com/actions/runner/issues/688
-        bail "32-bit ARM runner is not supported yet by this action"
+        bail "32-bit ARM runner is not supported yet by this action; if you need support for this platform, please submit an issue at <https://github.com/taiki-e/cache-cargo-install-action>"
         ;;
     # GitHub Actions Runner supports Linux (x86_64, aarch64, arm), Windows (x86_64, aarch64),
     # and macOS (x86_64, aarch64).
-    # https://github.com/actions/runner
-    # https://github.com/actions/runner/blob/caec043085990710070108f375cd0aeab45e1017/.github/workflows/build.yml#L21
+    # https://github.com/actions/runner/blob/v2.315.0/.github/workflows/build.yml#L21
     # https://docs.github.com/en/actions/hosting-your-own-runners/about-self-hosted-runners#supported-architectures-and-operating-systems-for-self-hosted-runners
     # So we can assume x86_64 unless it is aarch64 or arm.
     *) host_arch="x86_64" ;;
@@ -191,7 +195,7 @@ if [[ "${version}" == "latest" ]] || [[ -n "${fetch}" ]]; then
         linux*)
             if ! type -P jq &>/dev/null || ! type -P curl &>/dev/null; then
                 case "${base_distro}" in
-                    debian | fedora | alpine)
+                    debian | fedora | arch | alpine)
                         echo "::group::Install packages required for installation (jq and/or curl)"
                         sys_packages=()
                         if ! type -P curl &>/dev/null; then
@@ -214,7 +218,7 @@ if [[ "${version}" == "latest" ]] || [[ -n "${fetch}" ]]; then
                         fi
                         echo "::endgroup::"
                         ;;
-                    *) warn "cache-cargo-install-action requires jq and curl on non-Debian/Fedora/Alpine-based Linux" ;;
+                    *) warn "cache-cargo-install-action requires jq and curl on non-Debian/Fedora/Arch/Alpine-based Linux" ;;
                 esac
             fi
             ;;

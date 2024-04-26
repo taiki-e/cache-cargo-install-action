@@ -51,12 +51,21 @@ runs:
         args=(-f "${{ steps.pre.outputs.tool }}" --root "${RUNNER_TOOL_CACHE}/${{ steps.pre.outputs.tool }}" ${{ steps.pre.outputs.locked }})
         if [[ -n "${{ steps.pre.outputs.git }}" ]]; then
           if [[ -n "${{ steps.pre.outputs.tag }}" ]]; then
-            cargo install "${args[@]}" --git "${{ steps.pre.outputs.git }}" --tag "${{ steps.pre.outputs.tag }}"
+            (
+              set -x
+              cargo install "${args[@]}" --git "${{ steps.pre.outputs.git }}" --tag "${{ steps.pre.outputs.tag }}"
+            )
           else
-            cargo install "${args[@]}" --git "${{ steps.pre.outputs.git }}" --rev "${{ steps.pre.outputs.rev }}"
+            (
+              set -x
+              cargo install "${args[@]}" --git "${{ steps.pre.outputs.git }}" --rev "${{ steps.pre.outputs.rev }}"
+            )
           fi
         else
-          cargo install "${args[@]}" --version "${{ steps.pre.outputs.version }}"
+          (
+            set -x
+            cargo install "${args[@]}" --version "${{ steps.pre.outputs.version }}"
+          )
         fi
       shell: bash
       if: steps.cache.outputs.cache-hit != 'true'

@@ -10,6 +10,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 ## [Unreleased]
 
+- Improve support for Arch based containers/self-hosted runners.
+
 ## [1.3.0] - 2023-10-15
 
 - Add `git` input option to install from the specified Git URL.

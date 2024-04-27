@@ -36,7 +36,7 @@ For performance and robustness, we recommend using [install-action] if the tool 
 To install the latest version:
 
 ```yaml
-- uses: taiki-e/cache-cargo-install-action@v1
+- uses: taiki-e/cache-cargo-install-action@v2
   with:
     tool: cargo-hack
 ```
@@ -44,7 +44,7 @@ To install the latest version:
 To install a specific version, use `@version` syntax:
 
 ```yaml
-- uses: taiki-e/cache-cargo-install-action@v1
+- uses: taiki-e/cache-cargo-install-action@v2
   with:
     tool: cargo-hack@0.5.24
 ```
@@ -53,7 +53,7 @@ You can also omit patch version.
 (You can also omit the minor version if the major version is 1 or greater.)
 
 ```yaml
-- uses: taiki-e/cache-cargo-install-action@v1
+- uses: taiki-e/cache-cargo-install-action@v2
   with:
     tool: cargo-hack@0.5
 ```
@@ -67,7 +67,7 @@ Therefore, migrating from/to [install-action] is usually just a change of action
 To migrate from this action to install-action:
 
 ```diff
-- - uses: taiki-e/cache-cargo-install-action@v1
+- - uses: taiki-e/cache-cargo-install-action@v2
 + - uses: taiki-e/install-action@v2
     with:
       tool: cargo-hack
@@ -77,7 +77,7 @@ To migrate from install-action to this action:
 
 ```diff
 - - uses: taiki-e/install-action@v2
-+ - uses: taiki-e/cache-cargo-install-action@v1
++ - uses: taiki-e/cache-cargo-install-action@v2
     with:
       tool: cargo-hack
 ```
@@ -97,10 +97,10 @@ The interface of this action is a subset of the interface of [install-action], s
   In this action, you need to write:
 
   ```yaml
-  - uses: taiki-e/cache-cargo-install-action@v1
+  - uses: taiki-e/cache-cargo-install-action@v2
       with:
         tool: cargo-hack
-  - uses: taiki-e/cache-cargo-install-action@v1
+  - uses: taiki-e/cache-cargo-install-action@v2
       with:
         tool: cargo-minimal-versions
   ```

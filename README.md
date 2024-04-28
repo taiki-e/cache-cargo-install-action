@@ -90,19 +90,19 @@ The interface of this action is a subset of the interface of [install-action], s
 
   ```yaml
   - uses: taiki-e/install-action@v2
-      with:
-        tool: cargo-hack,cargo-minimal-versions
+    with:
+      tool: cargo-hack,cargo-minimal-versions
   ```
 
   In this action, you need to write:
 
   ```yaml
   - uses: taiki-e/cache-cargo-install-action@v2
-      with:
-        tool: cargo-hack
+    with:
+      tool: cargo-hack
   - uses: taiki-e/cache-cargo-install-action@v2
-      with:
-        tool: cargo-minimal-versions
+    with:
+      tool: cargo-minimal-versions
   ```
 
 - install-action supports `@<tool_name>` shorthand, but this action does not.

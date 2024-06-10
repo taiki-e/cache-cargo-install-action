@@ -10,6 +10,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 ## [Unreleased]
 
+- Workaround [glibc compatibility issue on archlinux](https://github.com/taiki-e/install-action/issues/521).
+
 ## [2.0.0] - 2024-04-26
 
 - Update `actions/cache` from 3 to 4. ([#3](https://github.com/taiki-e/cache-cargo-install-action/pull/3))

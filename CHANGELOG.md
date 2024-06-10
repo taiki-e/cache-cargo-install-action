@@ -10,6 +10,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 ## [Unreleased]
 
+## [2.0.1] - 2024-06-10
+
 - Workaround [glibc compatibility issue on archlinux](https://github.com/taiki-e/install-action/issues/521).
 
 ## [2.0.0] - 2024-04-26
@@ -64,7 +66,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 Initial release
 
-[Unreleased]: https://github.com/taiki-e/cache-cargo-install-action/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/taiki-e/cache-cargo-install-action/compare/v2.0.1...HEAD
+[2.0.1]: https://github.com/taiki-e/cache-cargo-install-action/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/taiki-e/cache-cargo-install-action/compare/v1.4.0...v2.0.0
 [1.4.0]: https://github.com/taiki-e/cache-cargo-install-action/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/taiki-e/cache-cargo-install-action/compare/v1.2.2...v1.3.0

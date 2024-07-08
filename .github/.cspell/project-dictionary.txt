@@ -5,7 +5,6 @@ coreutils
 distro
 doas
 enablerepo
-endgroup
 epel
 microdnf
 pwsh

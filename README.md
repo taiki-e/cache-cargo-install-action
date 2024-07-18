@@ -122,8 +122,10 @@ To use this action in self-hosted runners or in containers, at least the followi
 - [create-gh-release-action]: GitHub Action for creating GitHub Releases based on changelog.
 - [upload-rust-binary-action]: GitHub Action for building and uploading Rust binary to GitHub Releases.
 - [setup-cross-toolchain-action]: GitHub Action for setup toolchains for cross compilation and cross testing for Rust.
+- [checkout-action]: GitHub Action for checking out a repository. (Simplified actions/checkout alternative that does not depend on Node.js.)
 
 [actions/cache]: https://github.com/actions/cache
+[checkout-action]: https://github.com/taiki-e/checkout-action
 [create-gh-release-action]: https://github.com/taiki-e/create-gh-release-action
 [install-action]: https://github.com/taiki-e/install-action
 [setup-cross-toolchain-action]: https://github.com/taiki-e/setup-cross-toolchain-action

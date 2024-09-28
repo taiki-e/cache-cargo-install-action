@@ -46,8 +46,7 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: taiki-e/checkout-action@v1
-      - name: Install Rust
-        run: rustup update stable --no-self-update
+      - uses: taiki-e/github-actions/install-rust@stable
       - uses: ./
         with:
           tool: ${{ matrix.tool1 || 'cargo-hack' }}

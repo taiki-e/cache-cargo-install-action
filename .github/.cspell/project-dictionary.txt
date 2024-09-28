@@ -8,5 +8,6 @@ enablerepo
 epel
 microdnf
 pwsh
+rootfs
 startswith
 xscale

@@ -30,21 +30,47 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          # NB: Sync list with https://github.com/taiki-e/checkout-action/blob/HEAD/.github/workflows/ci.yml
           - os: ubuntu-20.04
           - os: ubuntu-22.04
           - os: ubuntu-24.04
-          - os: ubuntu-20.04
+          - os: ubuntu-22.04
             tool1: cargo-hack@0.5.24
             tool2: cargo-llvm-cov@0.5.3
-          - os: ubuntu-20.04
+          - os: ubuntu-22.04
             tool1: cargo-hack@0.5
             tool2: cargo-llvm-cov@0.4
-          - os: macos-12
+          - os: macos-13
           - os: macos-14
+          - os: macos-15
           - os: windows-2019
+          - os: windows-2019
+            bash: msys64
+          - os: windows-2019
+            bash: cygwin
+          - os: windows-2022
+          - os: windows-2022
+            bash: msys64
+          - os: windows-2022
+            bash: cygwin
+          - os: windows-2022
+            tool1: cargo-hack@0.5.24
+            tool2: cargo-llvm-cov@0.5.3
+          - os: windows-2022
+            tool1: cargo-hack@0.5
+            tool2: cargo-llvm-cov@0.4
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
     steps:
+      - run: |
+          printf '%s\n' 'C:\msys64\mingw32\bin' >>"${GITHUB_PATH}"
+          printf '%s\n' 'C:\msys64\usr\bin' >>"${GITHUB_PATH}"
+        if: matrix.bash == 'msys64'
+      - run: |
+          choco install --no-progress --requirechecksums cygwin
+          printf '%s\n' 'C:\tools\cygwin\bin' >>"${GITHUB_PATH}"
+          printf '%s\n' 'C:\tools\cygwin\usr\bin' >>"${GITHUB_PATH}"
+        if: matrix.bash == 'cygwin'
       - uses: taiki-e/checkout-action@v1
       - uses: taiki-e/github-actions/install-rust@stable
       - uses: ./
@@ -67,7 +93,7 @@ jobs:
           git: https://github.com/taiki-e/cargo-minimal-versions
           tag: v0.1.19
       - run: cargo minimal-versions --version
-      # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsshell
+      # Test all shells listed in https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsshell
       - name: Test bash
         run: cargo llvm-cov --version
         shell: bash
@@ -92,19 +118,29 @@ jobs:
       fail-fast: false
       matrix:
         container:
+          # NB: Sync list with https://github.com/taiki-e/checkout-action/blob/HEAD/.github/workflows/ci.yml
+          # - ubuntu:14.04 # glibc 2.19 # https://github.com/actions/runner/issues/2906
+          # - ubuntu:16.04 # glibc 2.23 # https://github.com/actions/runner/issues/2906
+          # - ubuntu:18.04 # glibc 2.27 # https://github.com/actions/runner/issues/2906
           - ubuntu:20.04 # glibc 2.31
           - ubuntu:22.04 # glibc 2.35
           - ubuntu:24.04 # glibc 2.39
+          # - debian:9-slim # glibc 2.24 # https://github.com/actions/runner/issues/2906
           - debian:10-slim # glibc 2.28
           - debian:11-slim # glibc 2.31
           - debian:12-slim # glibc 2.36
-          - fedora:latest # glibc 2.38 (as of fedora 39)
+          - fedora:latest # glibc 2.39 (as of fedora 40)
           - almalinux:8 # glibc 2.28
           - almalinux:8-minimal # glibc 2.28
           - almalinux:9 # glibc 2.34
           - almalinux:9-minimal # glibc 2.34
-          - archlinux:latest # glibc 2.38 (as of 2024-04-18)
-          - alpine:latest # musl 1.2.4 (as of alpine 3.19)
+          # - centos:6 # glibc 2.12 # https://github.com/actions/runner/issues/2906
+          # - centos:7 # glibc 2.17 # https://github.com/actions/runner/issues/2906
+          # - opensuse/leap:latest # glibc 2.38 (as of leap 15.6)
+          # - opensuse/tumbleweed:latest # glibc 2.39 (as of 2024-07-19)
+          - archlinux:latest # glibc 2.39 (as of 2024-07-19)
+          - alpine:latest # musl 1.2.5 (as of alpine 3.20)
+          # - openwrt/rootfs:x86-64-openwrt-23.05 # musl 1.2.4
     runs-on: ubuntu-latest
     timeout-minutes: 60
     container: ${{ matrix.container }}

@@ -47,6 +47,7 @@ runs:
     - name: Install ${{ inputs.tool }}
       run: |
         export CARGO_NET_RETRY=10
+        # shellcheck disable=SC2206
         args=(-f "${{ steps.pre.outputs.tool }}" --root "${RUNNER_TOOL_CACHE}/${{ steps.pre.outputs.tool }}" ${{ steps.pre.outputs.locked }})
         if [[ -n "${{ steps.pre.outputs.git }}" ]]; then
           if [[ -n "${{ steps.pre.outputs.tag }}" ]]; then

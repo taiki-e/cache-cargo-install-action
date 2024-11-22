@@ -137,13 +137,13 @@ case "$(uname -m)" in
         # https://github.com/rust-lang/rustup/pull/593
         # https://github.com/cross-rs/cross/pull/1018
         # Does it seem only armv7l+ is supported?
-        # https://github.com/actions/runner/blob/v2.319.0/src/Misc/externals.sh#L191
+        # https://github.com/actions/runner/blob/v2.321.0/src/Misc/externals.sh#L178
         # https://github.com/actions/runner/issues/688
         bail "32-bit Arm runner is not supported yet by this action; if you need support for this platform, please submit an issue at <https://github.com/taiki-e/cache-cargo-install-action>"
         ;;
     # GitHub Actions Runner supports Linux (x86_64, AArch64, Arm), Windows (x86_64, AArch64),
     # and macOS (x86_64, AArch64).
-    # https://github.com/actions/runner/blob/v2.319.0/.github/workflows/build.yml#L21
+    # https://github.com/actions/runner/blob/v2.321.0/.github/workflows/build.yml#L21
     # https://docs.github.com/en/actions/hosting-your-own-runners/about-self-hosted-runners#supported-architectures-and-operating-systems-for-self-hosted-runners
     # So we can assume x86_64 unless it is AArch64 or Arm.
     *) host_arch=x86_64 ;;

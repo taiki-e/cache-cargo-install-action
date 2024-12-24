@@ -58,6 +58,11 @@ jobs:
             bash: msys64
           - os: windows-2022
             bash: cygwin
+          - os: windows-2025
+          - os: windows-2025
+            bash: msys64
+          - os: windows-2025
+            bash: cygwin
           - os: windows-2022
             tool1: cargo-hack@0.5.24
             tool2: cargo-llvm-cov@0.5.3

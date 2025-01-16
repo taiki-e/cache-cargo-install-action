@@ -25,11 +25,11 @@ For performance and robustness, we recommend using [install-action] if the tool 
 
 | Name   | Required | Description                                                                | Type    | Default |
 | ------ |:--------:| -------------------------------------------------------------------------- | ------- | ------- |
-| tool   | **true** | Crate to install                                                           | String  |         |
-| locked | false    | Use `--locked` flag                                                        | Boolean | true    |
-| git    | false    | Install from the specified Git URL (see [action.yml](action.yml) for more) | String  |         |
-| tag    | false    | Tag to use when installing from git                                        | String  |         |
-| rev    | false    | Specific commit to use when installing from git                            | String  |         |
+| tool   | **✓**    | Crate to install                                                           | String  |         |
+| locked |          | Use `--locked` flag                                                        | Boolean | true    |
+| git    |          | Install from the specified Git URL (see [action.yml](action.yml) for more) | String  |         |
+| tag    |          | Tag to use when installing from git                                        | String  |         |
+| rev    |          | Specific commit to use when installing from git                            | String  |         |
 
 ### Example workflow
 

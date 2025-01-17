@@ -37,7 +37,9 @@ jobs:
         include:
           # NB: Sync list with https://github.com/taiki-e/checkout-action/blob/HEAD/.github/workflows/ci.yml
           - os: ubuntu-22.04
+          - os: ubuntu-22.04-arm
           - os: ubuntu-24.04
+          - os: ubuntu-24.04-arm
           - os: ubuntu-22.04
             tool1: cargo-hack@0.5.24
             tool2: cargo-llvm-cov@0.5.3
@@ -158,9 +160,6 @@ jobs:
         run: |
           apt-get -o Acquire::Retries=10 -qq update
           apt-get -o Acquire::Retries=10 -o Dpkg::Use-Pty=0 install -y --no-install-recommends ca-certificates curl gcc libc6-dev
-          curl --proto '=https' --tlsv1.2 -fsSL --retry 10 https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain stable --no-modify-path
-          printf '%s\n' "${HOME}/.cargo/bin" >>"${GITHUB_PATH}"
-          apt-get -qq -o Dpkg::Use-Pty=0 remove -y curl
         if: startsWith(matrix.container, 'ubuntu') || startsWith(matrix.container, 'debian')
       - name: Install requirements (fedora/almalinux)
         run: |
@@ -171,16 +170,15 @@ jobs:
           else
             yum install -y gcc
           fi
-          curl --proto '=https' --tlsv1.2 -fsSL --retry 10 https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain stable --no-modify-path
-          printf '%s\n' "${HOME}/.cargo/bin" >>"${GITHUB_PATH}"
         if: startsWith(matrix.container, 'fedora') || startsWith(matrix.container, 'almalinux')
-      - name: Install requirements (archlinux)
-        run: pacman -Sy --noconfirm rust
-        if: startsWith(matrix.container, 'archlinux')
       - name: Install requirements (alpine)
         run: apk --no-cache add bash cargo
         shell: sh
         if: startsWith(matrix.container, 'alpine')
+      - uses: taiki-e/github-actions/install-rust@stable
+        if: startsWith(matrix.container, 'ubuntu') || startsWith(matrix.container, 'debian') || startsWith(matrix.container, 'fedora') || startsWith(matrix.container, 'almalinux') || startsWith(matrix.container, 'archlinux')
+      - run: apt-get -qq -o Dpkg::Use-Pty=0 remove -y curl
+        if: startsWith(matrix.container, 'ubuntu') || startsWith(matrix.container, 'debian')
       - uses: taiki-e/checkout-action@v1
       - uses: ./
         with:

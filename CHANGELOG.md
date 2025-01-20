@@ -10,6 +10,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 ## [Unreleased]
 
+## [2.1.0] - 2025-01-20
+
 - Improve support for Alpine based containers/self-hosted runners (no longer need to install bash in advance).
 
 ## [2.0.1] - 2024-06-10
@@ -68,7 +70,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 Initial release
 
-[Unreleased]: https://github.com/taiki-e/cache-cargo-install-action/compare/v2.0.1...HEAD
+[Unreleased]: https://github.com/taiki-e/cache-cargo-install-action/compare/v2.1.0...HEAD
+[2.1.0]: https://github.com/taiki-e/cache-cargo-install-action/compare/v2.0.1...v2.1.0
 [2.0.1]: https://github.com/taiki-e/cache-cargo-install-action/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/taiki-e/cache-cargo-install-action/compare/v1.4.0...v2.0.0
 [1.4.0]: https://github.com/taiki-e/cache-cargo-install-action/compare/v1.3.0...v1.4.0

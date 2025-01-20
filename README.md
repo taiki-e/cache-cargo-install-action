@@ -110,11 +110,18 @@ The interface of this action is a subset of the interface of [install-action], s
 ## Compatibility
 
 This action has been tested for GitHub-hosted runners (Ubuntu, macOS, Windows) and containers (Ubuntu, Debian, Fedora, Alma, Arch, Alpine).
+
 To use this action in self-hosted runners or in containers, at least the following tools are required:
 
-- bash
-- GNU tar
 - cargo
+
+On Linux, if other required tools are missing, this action will attempt to install them from distro's package manager, so no pre-setup is usually required.
+
+On other platforms, the following tools are also required:
+
+- bash
+- jq (only on non-Windows platforms, and when installing the latest version or the patch version of the specified version is omitted)
+- curl (only when installing the latest version or the patch version of the specified version is omitted)
 
 ## Related Projects
 

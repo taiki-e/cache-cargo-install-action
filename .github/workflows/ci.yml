@@ -172,7 +172,7 @@ jobs:
           fi
         if: startsWith(matrix.container, 'fedora') || startsWith(matrix.container, 'almalinux')
       - name: Install requirements (alpine)
-        run: apk --no-cache add bash cargo
+        run: apk --no-cache add cargo
         shell: sh
         if: startsWith(matrix.container, 'alpine')
       - uses: taiki-e/github-actions/install-rust@stable
@@ -180,6 +180,10 @@ jobs:
       - run: apt-get -qq -o Dpkg::Use-Pty=0 remove -y curl
         if: startsWith(matrix.container, 'ubuntu') || startsWith(matrix.container, 'debian')
       - uses: taiki-e/checkout-action@v1
+      # remove bash installed by checkout-action
+      - run: apk --no-cache del bash
+        shell: sh
+        if: startsWith(matrix.container, 'alpine')
       - uses: ./
         with:
           tool: cargo-hack

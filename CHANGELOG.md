@@ -10,6 +10,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 ## [Unreleased]
 
+- Improve support for Alpine based containers/self-hosted runners (no longer need to install bash in advance).
+
 ## [2.0.1] - 2024-06-10
 
 - Workaround [glibc compatibility issue on archlinux](https://github.com/taiki-e/install-action/issues/521).

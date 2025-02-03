@@ -171,6 +171,9 @@ jobs:
             yum install -y gcc
           fi
         if: startsWith(matrix.container, 'fedora') || startsWith(matrix.container, 'almalinux')
+      - name: Install requirements (archlinux)
+        run: pacman -Sy --noconfirm gcc
+        if: startsWith(matrix.container, 'archlinux')
       - name: Install requirements (alpine)
         run: apk --no-cache add cargo
         shell: sh

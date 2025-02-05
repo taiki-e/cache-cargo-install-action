@@ -10,6 +10,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 ## [Unreleased]
 
+- Fix regression on Windows introduced in 2.1.0.
+
 ## [2.1.0] - 2025-01-20
 
 - Improve support for Alpine based containers/self-hosted runners (no longer need to install bash in advance).

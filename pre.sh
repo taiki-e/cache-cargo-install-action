@@ -327,10 +327,10 @@ bin_dir="${RUNNER_TOOL_CACHE}/${tool}/bin"
 printf '%s\n' "${bin_dir}" >>"${GITHUB_PATH}"
 
 if [[ -n "${git}" ]]; then
-  key="${tool}-git-${tag:+"tag-${tag}"}${rev:+"rev-${rev}"}-${host_arch}-${host_os}${locked_key}-features-${features:-default}${no_default_features:+-no-default-features}${all_features:+-all-features}"
+  key="${tool}-git-${tag:+"tag-${tag}"}${rev:+"rev-${rev}"}-${host_arch}-${host_os}${locked_key}-features-${features:-default}-no-default-features-${no_default_features}-all-features-${all_features}"
 else
   features="${features//,/-}" # Commas are not allowed in cache key names
-  key="${tool}-${version}-${host_arch}-${host_os}${locked_key}-features-${features:-default}${no_default_features:+-no-default-features}${all_features:+-all-features}"
+  key="${tool}-${version}-${host_arch}-${host_os}${locked_key}-features-${features:-default}-no-default-features-${no_default_features}-all-features-${all_features}"
 fi
 cat >>"${GITHUB_OUTPUT}" <<EOF
 tool=${tool}

@@ -84,6 +84,9 @@ locked="${INPUT_LOCKED:?}"
 git="${INPUT_GIT:-}"
 tag="${INPUT_TAG:-}"
 rev="${INPUT_REV:-}"
+features="${INPUT_FEATURES:-}"
+no_default_features="${INPUT_NO_DEFAULT_FEATURES:-}"
+all_features="${INPUT_ALL_FEATURES:-}"
 
 # Refs: https://github.com/rust-lang/rustup/blob/HEAD/rustup-init.sh
 base_distro=''
@@ -187,6 +190,31 @@ case "${locked}" in
     locked_key=-locked-false
     ;;
   *) bail "'locked' input option must be 'true' or 'false': '${locked}'" ;;
+esac
+
+case "${features}" in
+  '') features_flag='' ;;
+  *) features_flag="--features=${features}" ;;
+esac
+
+case "${no_default_features}" in
+  true)
+    no_default_features_flag='--no-default-features'
+    ;;
+  false)
+    no_default_features_flag=''
+    ;;
+  *) bail "'no_default_features' input option must be 'true' or 'false': '${no_default_features}'" ;;
+esac
+
+case "${all_features}" in
+  true)
+    all_features_flag='--all-features'
+    ;;
+  false)
+    all_features_flag=''
+    ;;
+  *) bail "'all_features' input option must be 'true' or 'false': '${all_features}'" ;;
 esac
 
 if [[ "${version}" == "latest" ]] || [[ -n "${fetch}" ]]; then
@@ -299,9 +327,10 @@ bin_dir="${RUNNER_TOOL_CACHE}/${tool}/bin"
 printf '%s\n' "${bin_dir}" >>"${GITHUB_PATH}"
 
 if [[ -n "${git}" ]]; then
-  key="${tool}-git-${tag:+"tag-${tag}"}${rev:+"rev-${rev}"}-${host_arch}-${host_os}${locked_key}"
+  key="${tool}-git-${tag:+"tag-${tag}"}${rev:+"rev-${rev}"}-${host_arch}-${host_os}${locked_key}-features-${features:-default}${no_default_features:+-no-default-features}${all_features:+-all-features}"
 else
-  key="${tool}-${version}-${host_arch}-${host_os}${locked_key}"
+  features="${features//,/-}" # Commas are not allowed in cache key names
+  key="${tool}-${version}-${host_arch}-${host_os}${locked_key}-features-${features:-default}${no_default_features:+-no-default-features}${all_features:+-all-features}"
 fi
 cat >>"${GITHUB_OUTPUT}" <<EOF
 tool=${tool}
@@ -312,4 +341,7 @@ locked=${locked}
 git=${git}
 tag=${tag}
 rev=${rev}
+features_flag=${features_flag}
+no_default_features_flag=${no_default_features_flag}
+all_features_flag=${all_features_flag}
 EOF

@@ -265,7 +265,7 @@ if [[ "${version}" == "latest" ]] || [[ -n "${fetch}" ]]; then
     *) bail "unsupported host OS '${host_os}'" ;;
   esac
 
-  crate_info=$(retry curl --proto '=https' --tlsv1.2 -fsSL --retry 10 "https://crates.io/api/v1/crates/${tool}")
+  crate_info=$(retry curl -v --user-agent "${ACTION_USER_AGENT}" --proto '=https' --tlsv1.2 -fsSL --retry 10 "https://crates.io/api/v1/crates/${tool}")
   case "${version}" in
     latest)
       version=$(jq -r '.crate.max_stable_version' <<<"${crate_info}")

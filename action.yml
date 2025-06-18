@@ -59,6 +59,7 @@ runs:
         INPUT_GIT: ${{ inputs.git }}
         INPUT_TAG: ${{ inputs.tag }}
         INPUT_REV: ${{ inputs.rev }}
+        ACTION_USER_AGENT: ${{ github.action_repository }} (${{ github.action_ref }})
     - name: Restore Cache
       id: cache
       uses: actions/cache@v4

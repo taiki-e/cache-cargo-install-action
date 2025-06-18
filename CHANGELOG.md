@@ -10,6 +10,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 ## [Unreleased]
 
+## [2.1.2] - 2025-06-18
+
 - Fix installation failure on Ubuntu 24.04 due to HTTP 403 error on requests to crates.io. ([#11](https://github.com/taiki-e/cache-cargo-install-action/pull/11), @ctz)
 
 ## [2.1.1] - 2025-02-05
@@ -76,7 +78,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 Initial release
 
-[Unreleased]: https://github.com/taiki-e/cache-cargo-install-action/compare/v2.1.1...HEAD
+[Unreleased]: https://github.com/taiki-e/cache-cargo-install-action/compare/v2.1.2...HEAD
+[2.1.2]: https://github.com/taiki-e/cache-cargo-install-action/compare/v2.1.1...v2.1.2
 [2.1.1]: https://github.com/taiki-e/cache-cargo-install-action/compare/v2.1.0...v2.1.1
 [2.1.0]: https://github.com/taiki-e/cache-cargo-install-action/compare/v2.0.1...v2.1.0
 [2.0.1]: https://github.com/taiki-e/cache-cargo-install-action/compare/v2.0.0...v2.0.1

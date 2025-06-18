@@ -12,7 +12,7 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 ## [2.1.2] - 2025-06-18
 
-- Fix installation failure on Ubuntu 24.04 due to HTTP 403 error on requests to crates.io. ([#11](https://github.com/taiki-e/cache-cargo-install-action/pull/11), @ctz)
+- Fix installation failure on Ubuntu 24.04 due to HTTP 403 error on requests to crates.io. ([#11](https://github.com/taiki-e/cache-cargo-install-action/pull/11), thanks @ctz)
 
 ## [2.1.1] - 2025-02-05
 

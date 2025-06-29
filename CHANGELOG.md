@@ -10,6 +10,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 ## [Unreleased]
 
+- Support AArch64 Windows. ([416e06a](https://github.com/taiki-e/cache-cargo-install-action/commit/416e06a71d56b46522f4853a13720491b1e04f8a))
+
 ## [2.1.2] - 2025-06-18
 
 - Fix installation failure on Ubuntu 24.04 due to HTTP 403 error on requests to crates.io. ([#11](https://github.com/taiki-e/cache-cargo-install-action/pull/11), thanks @ctz)

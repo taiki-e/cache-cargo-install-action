@@ -146,7 +146,16 @@ case "$(uname -m)" in
   # https://github.com/actions/runner/blob/v2.321.0/.github/workflows/build.yml#L21
   # https://docs.github.com/en/actions/hosting-your-own-runners/about-self-hosted-runners#supported-architectures-and-operating-systems-for-self-hosted-runners
   # So we can assume x86_64 unless it is AArch64 or Arm.
-  *) host_arch=x86_64 ;;
+  *)
+    host_arch=x86_64
+    # Do additional check on Windows because uname -m on windows-11-arm returns "x86_64".
+    if [[ "${host_os}" == "windows" ]]; then
+      host=$(rustc -vV | grep -E '^host:' | cut -d' ' -f2)
+      case "${host}" in
+        aarch64* | arm64*) host_arch=aarch64 ;;
+      esac
+    fi
+    ;;
 esac
 
 if [[ "${tool}" == *","* ]]; then

@@ -10,6 +10,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 ## [Unreleased]
 
+## [2.2.0] - 2025-06-29
+
 - Support AArch64 Windows. ([416e06a](https://github.com/taiki-e/cache-cargo-install-action/commit/416e06a71d56b46522f4853a13720491b1e04f8a))
 
 ## [2.1.2] - 2025-06-18
@@ -80,7 +82,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 Initial release
 
-[Unreleased]: https://github.com/taiki-e/cache-cargo-install-action/compare/v2.1.2...HEAD
+[Unreleased]: https://github.com/taiki-e/cache-cargo-install-action/compare/v2.2.0...HEAD
+[2.2.0]: https://github.com/taiki-e/cache-cargo-install-action/compare/v2.1.2...v2.2.0
 [2.1.2]: https://github.com/taiki-e/cache-cargo-install-action/compare/v2.1.1...v2.1.2
 [2.1.1]: https://github.com/taiki-e/cache-cargo-install-action/compare/v2.1.0...v2.1.1
 [2.1.0]: https://github.com/taiki-e/cache-cargo-install-action/compare/v2.0.1...v2.1.0

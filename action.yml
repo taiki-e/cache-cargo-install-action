@@ -48,7 +48,7 @@ runs:
           fi
         fi
       shell: sh
-      if: runner.os	== 'Linux'
+      if: runner.os == 'Linux'
     - name: Pre Cache
       id: pre
       run: bash --noprofile --norc "${GITHUB_ACTION_PATH:?}/pre.sh"

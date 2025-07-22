@@ -52,13 +52,15 @@ jobs:
           - os: windows-2022
           - os: windows-2022
             bash: msys64
-          - os: windows-2022
-            bash: cygwin
+          # TODO: sometime broken "line 9: syntax error near unexpected token `$'\r''"
+          # - os: windows-2022
+          #   bash: cygwin
           - os: windows-2025
           - os: windows-2025
             bash: msys64
-          - os: windows-2025
-            bash: cygwin
+          # TODO: sometime broken "line 9: syntax error near unexpected token `$'\r''"
+          # - os: windows-2025
+          #   bash: cygwin
           - os: windows-11-arm
           - os: windows-2022
             tool1: cargo-hack@0.5.24

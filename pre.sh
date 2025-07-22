@@ -130,16 +130,14 @@ case "$(uname -s)" in
   MINGW* | MSYS* | CYGWIN* | Windows_NT) host_os=windows ;;
   *) bail "unrecognized OS type '$(uname -s)'" ;;
 esac
-case "$(uname -m)" in
+host_arch="$(uname -m)"
+case "${host_arch}" in
   aarch64 | arm64) host_arch=aarch64 ;;
-  xscale | arm | armv*l)
-    # Ignore Arm for now, as we need to consider the version and whether hard-float is supported.
-    # https://github.com/rust-lang/rustup/pull/593
-    # https://github.com/cross-rs/cross/pull/1018
-    # Does it seem only armv7l+ is supported?
-    # https://github.com/actions/runner/blob/v2.321.0/src/Misc/externals.sh#L178
-    # https://github.com/actions/runner/issues/688
-    bail "32-bit Arm runner is not supported yet by this action; if you need support for this platform, please submit an issue at <https://github.com/taiki-e/cache-cargo-install-action>"
+  # On these platforms, we can just use the result of `uname -m` as host_arch.
+  xscale | arm | armv*l | loongarch64 | ppc | ppc64 | ppc64le | riscv64 | s390x | sun4v) ;;
+  # Ignore MIPS for now, as we also need to detect endianness.
+  mips | mips64)
+    bail "MIPS runner is not supported yet by this action; if you need support for this platform, please submit an issue at <https://github.com/taiki-e/cache-cargo-install-action>"
     ;;
   # GitHub Actions Runner supports Linux (x86_64, AArch64, Arm), Windows (x86_64, AArch64),
   # and macOS (x86_64, AArch64).

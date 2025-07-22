@@ -133,16 +133,14 @@ case "$(uname -s)" in
   MINGW* | MSYS* | CYGWIN* | Windows_NT) host_os=windows ;;
   *) bail "unrecognized OS type '$(uname -s)'" ;;
 esac
-case "$(uname -m)" in
+host_arch="$(uname -m)"
+case "${host_arch}" in
   aarch64 | arm64) host_arch=aarch64 ;;
-  xscale | arm | armv*l)
-    # Ignore Arm for now, as we need to consider the version and whether hard-float is supported.
-    # https://github.com/rust-lang/rustup/pull/593
-    # https://github.com/cross-rs/cross/pull/1018
-    # Does it seem only armv7l+ is supported?
-    # https://github.com/actions/runner/blob/v2.321.0/src/Misc/externals.sh#L178
-    # https://github.com/actions/runner/issues/688
-    bail "32-bit Arm runner is not supported yet by this action; if you need support for this platform, please submit an issue at <https://github.com/taiki-e/cache-cargo-install-action>"
+  # On these platforms, we can just use the result of `uname -m` as host_arch.
+  xscale | arm | armv*l | loongarch64 | ppc | ppc64 | ppc64le | riscv64 | s390x | sun4v) ;;
+  # Ignore MIPS for now, as we also need to detect endianness.
+  mips | mips64)
+    bail "MIPS runner is not supported yet by this action; if you need support for this platform, please submit an issue at <https://github.com/taiki-e/cache-cargo-install-action>"
     ;;
   # GitHub Actions Runner supports Linux (x86_64, AArch64, Arm), Windows (x86_64, AArch64),
   # and macOS (x86_64, AArch64).
@@ -288,8 +286,8 @@ if [[ "${version}" == "latest" ]] || [[ -n "${fetch}" ]]; then
       else
         printf '::group::Install packages required for installation (jq)\n'
         mkdir -p -- "${install_action_dir}/jq/bin"
-        url='https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-windows-amd64.exe'
-        checksum='7451fbbf37feffb9bf262bd97c54f0da558c63f0748e64152dd87b0a07b6d6ab'
+        url='https://github.com/jqlang/jq/releases/download/jq-1.8.1/jq-windows-amd64.exe'
+        checksum='23cb60a1354eed6bcc8d9b9735e8c7b388cd1fdcb75726b93bc299ef22dd9334'
         (
           cd -- "${install_action_dir}/jq/bin"
           download_and_checksum "${url}" "${checksum}"

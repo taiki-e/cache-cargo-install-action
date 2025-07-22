@@ -211,7 +211,7 @@ case "${no_default_features}" in
   false)
     no_default_features_flag=''
     ;;
-  *) bail "'no_default_features' input option must be 'true' or 'false': '${no_default_features}'" ;;
+  *) bail "'no-default-features' input option must be 'true' or 'false': '${no_default_features}'" ;;
 esac
 
 case "${all_features}" in
@@ -221,7 +221,7 @@ case "${all_features}" in
   false)
     all_features_flag=''
     ;;
-  *) bail "'all_features' input option must be 'true' or 'false': '${all_features}'" ;;
+  *) bail "'all-features' input option must be 'true' or 'false': '${all_features}'" ;;
 esac
 
 if [[ "${version}" == "latest" ]] || [[ -n "${fetch}" ]]; then

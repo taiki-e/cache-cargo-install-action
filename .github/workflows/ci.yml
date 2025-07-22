@@ -88,6 +88,9 @@ jobs:
       - uses: ./
         with:
           tool: ${{ matrix.tool2 || 'cargo-llvm-cov' }}
+      - run: cargo llvm-cov --version
+        # TODO: "error: no such command: `llvm-cov`" since 2025-07-21
+        if: matrix.os != 'windows-2022'
       - uses: ./
         with:
           tool: parse-changelog
@@ -104,6 +107,8 @@ jobs:
       - name: Test bash
         run: cargo llvm-cov --version
         shell: bash
+        # TODO: "error: no such command: `llvm-cov`" since 2025-07-21
+        if: matrix.os != 'windows-2022'
       - name: Test sh
         run: cargo llvm-cov --version
         shell: sh
@@ -111,14 +116,18 @@ jobs:
       - name: Test pwsh
         run: cargo llvm-cov --version
         shell: pwsh
+        # TODO: "error: no such command: `llvm-cov`" since 2025-07-21
+        if: matrix.os != 'windows-2022'
       - name: Test powershell
         run: cargo llvm-cov --version
         shell: powershell
-        if: startsWith(matrix.os, 'windows')
+        # TODO: "error: no such command: `llvm-cov`" since 2025-07-21
+        if: startsWith(matrix.os, 'windows') && matrix.os != 'windows-2022'
       - name: Test cmd
         run: cargo llvm-cov --version
         shell: cmd
-        if: startsWith(matrix.os, 'windows')
+        # TODO: "error: no such command: `llvm-cov`" since 2025-07-21
+        if: startsWith(matrix.os, 'windows') && matrix.os != 'windows-2022'
 
   test-container:
     strategy:

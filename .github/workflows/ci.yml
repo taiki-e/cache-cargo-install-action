@@ -46,7 +46,6 @@ jobs:
           - os: ubuntu-22.04
             tool1: cargo-hack@0.5
             tool2: cargo-llvm-cov@0.4
-          - os: macos-13
           - os: macos-14
           - os: macos-15
           # TODO: "error: no such command: `llvm-cov`" since 2025-07-21

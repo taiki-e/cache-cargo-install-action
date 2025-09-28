@@ -10,6 +10,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 ## [Unreleased]
 
+- Fix version parsing failures on Windows caused by trailing carriage returns (`\r`) in JSON responses from crates.io API. ([#12](https://github.com/taiki-e/cache-cargo-install-action/pull/12), thanks @Xevion)
+
 ## [2.3.0] - 2025-07-22
 
 - Support `features`, `no-default-features`, and `all-features` input options. ([#9](https://github.com/taiki-e/cache-cargo-install-action/pull/9), thanks @AlexTMjugador)

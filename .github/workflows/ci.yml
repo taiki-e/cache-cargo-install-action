@@ -189,7 +189,7 @@ jobs:
         if: startsWith(matrix.container, 'alpine')
       - uses: taiki-e/github-actions/install-rust@stable
         if: startsWith(matrix.container, 'ubuntu') || startsWith(matrix.container, 'debian') || startsWith(matrix.container, 'fedora') || startsWith(matrix.container, 'almalinux') || startsWith(matrix.container, 'archlinux')
-      - run: apt-get -qq -o Dpkg::Use-Pty=0 remove -y curl
+      - run: apt-get -qq -o Dpkg::Use-Pty=0 purge -y curl
         if: startsWith(matrix.container, 'ubuntu') || startsWith(matrix.container, 'debian')
       - uses: taiki-e/checkout-action@v1
       # remove bash installed by checkout-action

@@ -139,14 +139,14 @@ case "${host_arch}" in
   # On these platforms, we can just use the result of `uname -m` as host_arch.
   xscale | arm | armv*l | loongarch64 | ppc | ppc64 | ppc64le | riscv64 | s390x | sun4v) ;;
   # Ignore MIPS for now, as we also need to detect endianness.
-  mips | mips64)
-    bail "MIPS runner is not supported yet by this action; if you need support for this platform, please submit an issue at <https://github.com/taiki-e/cache-cargo-install-action>"
-    ;;
-  # GitHub Actions Runner supports Linux (x86_64, AArch64, Arm), Windows (x86_64, AArch64),
-  # and macOS (x86_64, AArch64).
+  mips | mips64) bail "MIPS runner is not supported yet by this action; if you need support for this platform, please submit an issue at <https://github.com/taiki-e/cache-cargo-install-action>" ;;
+  # GitHub Actions Runner supports x86_64/AArch64/Arm Linux, x86_64/AArch64 Windows,
+  # and x86_64/AArch64 macOS.
   # https://github.com/actions/runner/blob/v2.321.0/.github/workflows/build.yml#L21
-  # https://docs.github.com/en/actions/hosting-your-own-runners/about-self-hosted-runners#supported-architectures-and-operating-systems-for-self-hosted-runners
-  # So we can assume x86_64 unless it is AArch64 or Arm.
+  # https://docs.github.com/en/actions/reference/runners/self-hosted-runners#supported-processor-architectures
+  # And IBM provides runners for powerpc64le/s390x Linux.
+  # https://github.com/IBM/actionspz
+  # So we can assume x86_64 unless it has a known non-x86_64 uname -m result.
   *)
     host_arch=x86_64
     # Do additional check on Windows because uname -m on windows-11-arm returns "x86_64".

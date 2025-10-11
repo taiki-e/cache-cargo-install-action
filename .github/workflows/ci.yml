@@ -48,6 +48,7 @@ jobs:
             tool2: cargo-llvm-cov@0.4
           - os: macos-14
           - os: macos-15
+          - os: macos-15-intel
           - os: macos-26
           - os: windows-2022
           - os: windows-2022

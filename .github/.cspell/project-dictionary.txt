@@ -2,12 +2,10 @@ almalinux
 archlinux
 binstall
 coreutils
-distro
 doas
 enablerepo
 epel
 microdnf
-pwsh
 rootfs
 startswith
 xscale

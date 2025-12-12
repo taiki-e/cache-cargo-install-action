@@ -77,7 +77,7 @@ runs:
         ACTION_USER_AGENT: ${{ github.action_repository }} (${{ github.action_ref }})
     - name: Restore Cache
       id: cache
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ${{ steps.pre.outputs.path }}
         key: ${{ steps.pre.outputs.key }}

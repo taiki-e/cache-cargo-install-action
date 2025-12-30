@@ -10,6 +10,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 ## [Unreleased]
 
+- Update `actions/cache` from 4 to 5. ([#14](https://github.com/taiki-e/cache-cargo-install-action/pull/14))
+
 ## [2.3.1] - 2025-09-28
 
 - Fix version parsing failures on Windows caused by trailing carriage returns (`\r`) in JSON responses from crates.io API. ([#12](https://github.com/taiki-e/cache-cargo-install-action/pull/12), thanks @Xevion)

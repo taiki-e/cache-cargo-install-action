@@ -40,6 +40,7 @@ jobs:
           - os: ubuntu-22.04-arm
           - os: ubuntu-24.04
           - os: ubuntu-24.04-arm
+          - os: ubuntu-slim
           - os: ubuntu-22.04
             tool1: cargo-hack@0.5.24
             tool2: cargo-llvm-cov@0.5.3

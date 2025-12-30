@@ -23,16 +23,16 @@ For performance and robustness, we recommend using [install-action] if the tool 
 
 ### Inputs
 
-| Name                | Required | Description                                                                | Type    | Default |
-|---------------------|:--------:|----------------------------------------------------------------------------|---------|---------|
-| tool                | **✓**    | Crate to install                                                           | String  |         |
-| locked              |          | Use `--locked` flag                                                        | Boolean | true    |
-| git                 |          | Install from the specified Git URL (see [action.yml](action.yml) for more) | String  |         |
-| tag                 |          | Tag to use when installing from git                                        | String  |         |
-| rev                 |          | Specific commit to use when installing from git                            | String  |         |
-| features            |          | Comma-separated list of features to enable when installing the crate       | String  |         |
-| no-default-features |          | Pass `--no-default-features` to `cargo install`                            | Boolean | false   |
-| all-features        |          | Pass `--all-features` to `cargo install`                                   | Boolean | false   |
+| Name | Required | Description | Type | Default |
+| ---- | :------: | ----------- | ---- | ------- |
+| tool | **✓** | Crate to install | String | |
+| locked | | Use `--locked` flag | Boolean | true |
+| git | | Install from the specified Git URL (see [action.yml](action.yml) for more) | String | |
+| tag | | Tag to use when installing from git | String | |
+| rev | | Specific commit to use when installing from git | String | |
+| features | | Comma-separated list of features to enable when installing the crate | String | |
+| no-default-features | | Pass `--no-default-features` to `cargo install` | Boolean | false |
+| all-features | | Pass `--all-features` to `cargo install` | Boolean | false |
 
 ### Example workflow
 

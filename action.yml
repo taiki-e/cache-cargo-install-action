@@ -85,24 +85,45 @@ runs:
       run: |
         export CARGO_NET_RETRY=10
         # shellcheck disable=SC2206
-        args=(-f "${{ steps.pre.outputs.tool }}" --root "${RUNNER_TOOL_CACHE}/${{ steps.pre.outputs.tool }}" ${{ steps.pre.outputs.locked }} ${{ steps.pre.outputs.features_flag }} ${{ steps.pre.outputs.no_default_features_flag }} ${{ steps.pre.outputs.all_features_flag }})
-        if [[ -n "${{ steps.pre.outputs.git }}" ]]; then
-          if [[ -n "${{ steps.pre.outputs.tag }}" ]]; then
-            (
-              set -x
-              cargo install "${args[@]}" --git "${{ steps.pre.outputs.git }}" --tag "${{ steps.pre.outputs.tag }}"
-            )
+        args=(
+          -f "${INPUT_TOOL}"
+          --root "${RUNNER_TOOL_CACHE}/${INPUT_TOOL}"
+        )
+        if [[ -n "${INPUT_LOCKED}" ]]; then
+          args+=("${INPUT_LOCKED}")
+        fi
+        if [[ -n "${INPUT_FEATURES_FLAG}" ]]; then
+          args+=("${INPUT_FEATURES_FLAG}")
+        fi
+        if [[ -n "${INPUT_NO_DEFAULT_FEATURES_FLAG}" ]]; then
+          args+=("${INPUT_NO_DEFAULT_FEATURES_FLAG}")
+        fi
+        if [[ -n "${INPUT_ALL_FEATURES_FLAG}" ]]; then
+          args+=("${INPUT_ALL_FEATURES_FLAG}")
+        fi
+        if [[ -n "${INPUT_GIT}" ]]; then
+          args+=(--git "${INPUT_GIT}")
+          if [[ -n "${INPUT_TAG}" ]]; then
+            args+=(--tag "${INPUT_TAG}")
           else
-            (
-              set -x
-              cargo install "${args[@]}" --git "${{ steps.pre.outputs.git }}" --rev "${{ steps.pre.outputs.rev }}"
-            )
+            args+=(--rev "${INPUT_REV}")
           fi
         else
-          (
-            set -x
-            cargo install "${args[@]}" --version "${{ steps.pre.outputs.version }}"
-          )
+          args+=(--version "${INPUT_VERSION}")
         fi
+        (
+          set -x
+          cargo install "${args[@]}"
+        )
       shell: bash
+      env:
+        INPUT_GIT: ${{ steps.pre.outputs.git }}
+        INPUT_REV: ${{ steps.pre.outputs.rev }}
+        INPUT_TAG: ${{ steps.pre.outputs.tag }}
+        INPUT_TOOL: ${{ steps.pre.outputs.tool }}
+        INPUT_VERSION: ${{ steps.pre.outputs.version }}
+        INPUT_LOCKED: ${{ steps.pre.outputs.locked }}
+        INPUT_FEATURES_FLAG: ${{ steps.pre.outputs.features_flag }}
+        INPUT_NO_DEFAULT_FEATURES_FLAG: ${{ steps.pre.outputs.no_default_features_flag }}
+        INPUT_ALL_FEATURES_FLAG: ${{ steps.pre.outputs.all_features_flag }}
       if: steps.cache.outputs.cache-hit != 'true'

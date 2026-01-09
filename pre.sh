@@ -316,12 +316,11 @@ if [[ "${version}" == "latest" ]] || [[ -n "${fetch}" ]]; then
       versions=($(jq -r ".versions[] | select(.num | startswith(\"${version}.\")) | select(.yanked == false) | .num" <<<"${crate_info}"))
       full_version=''
       for v in ${versions[@]+"${versions[@]}"}; do
-        # On Windows, the version string can contain trailing whitespace (\r), so remove it.
-        v_cleaned="${v%%[[:space:]]}"
-        if [[ "${v_cleaned}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(\+[0-9A-Za-z\.-]+)?$ ]]; then
-          full_version="${v_cleaned}"
-          break
+        if [[ ! "${v}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(\+[0-9A-Za-z\.-]+)?$ ]]; then
+          continue
         fi
+        full_version="${v}"
+        break
       done
       if [[ -z "${full_version}" ]]; then
         bail "no stable version  found for ${tool} that match with '${version}.*'; if you want to install a pre-release version, please specify the full version"

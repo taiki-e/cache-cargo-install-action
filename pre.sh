@@ -276,7 +276,7 @@ if [[ "${version}" == "latest" ]] || [[ -n "${fetch}" ]]; then
         # https://github.com/jqlang/jq/issues/1854
         _tmp=$(jq -r .a <<<'{}' | wc -c)
         if [[ "${_tmp}" != 5 ]]; then
-          _tmp=$( (jq -b -r .a 2>/dev/null <<<'{}' || true) | wc -c)
+          _tmp=$({ jq -b -r .a 2>/dev/null <<<'{}' || true; } | wc -c)
           if [[ "${_tmp}" == 5 ]]; then
             jq() { command jq -b "$@"; }
           else
@@ -316,11 +316,10 @@ if [[ "${version}" == "latest" ]] || [[ -n "${fetch}" ]]; then
       versions=($(jq -r ".versions[] | select(.num | startswith(\"${version}.\")) | select(.yanked == false) | .num" <<<"${crate_info}"))
       full_version=''
       for v in ${versions[@]+"${versions[@]}"}; do
-        if [[ ! "${v}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(\+[0-9A-Za-z\.-]+)?$ ]]; then
-          continue
+        if [[ "${v}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(\+[0-9A-Za-z\.-]+)?$ ]]; then
+          full_version="${v}"
+          break
         fi
-        full_version="${v}"
-        break
       done
       if [[ -z "${full_version}" ]]; then
         bail "no stable version  found for ${tool} that match with '${version}.*'; if you want to install a pre-release version, please specify the full version"

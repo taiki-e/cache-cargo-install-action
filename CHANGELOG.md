@@ -10,6 +10,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 ## [Unreleased]
 
+## [3.0.1] - 2026-01-11
+
 - Improve support for Windows with MSYS2 bash. ([#15](https://github.com/taiki-e/cache-cargo-install-action/pull/15), thanks @chitoku-k)
 
 - Enable [release immutability](https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/immutable-releases).
@@ -100,7 +102,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 Initial release
 
-[Unreleased]: https://github.com/taiki-e/cache-cargo-install-action/compare/v3.0.0...HEAD
+[Unreleased]: https://github.com/taiki-e/cache-cargo-install-action/compare/v3.0.1...HEAD
+[3.0.1]: https://github.com/taiki-e/cache-cargo-install-action/compare/v3.0.0...v3.0.1
 [3.0.0]: https://github.com/taiki-e/cache-cargo-install-action/compare/v2.3.1...v3.0.0
 [2.3.1]: https://github.com/taiki-e/cache-cargo-install-action/compare/v2.3.0...v2.3.1
 [2.3.0]: https://github.com/taiki-e/cache-cargo-install-action/compare/v2.2.0...v2.3.0

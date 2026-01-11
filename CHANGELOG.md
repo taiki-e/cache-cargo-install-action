@@ -10,6 +10,10 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 ## [Unreleased]
 
+- Improve support for Windows with MSYS2 bash. ([#15](https://github.com/taiki-e/cache-cargo-install-action/pull/15), thanks @chitoku-k)
+
+- Enable [release immutability](https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/immutable-releases).
+
 ## [3.0.0] - 2025-12-30
 
 - Update `actions/cache` from 4 to 5. ([#14](https://github.com/taiki-e/cache-cargo-install-action/pull/14))

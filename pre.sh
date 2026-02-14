@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # SPDX-License-Identifier: Apache-2.0 OR MIT
-set -CeEuo pipefail
+# Do not set -E as busybox 3.15 and older don't support it.
+set -Ceuo pipefail
 IFS=$'\n\t'
 
 retry() {
@@ -29,11 +30,11 @@ normalize_comma_or_space_separated() {
   if [[ "${list}" == *","* ]]; then
     # If a comma is contained, consider it is a comma-separated list.
     # Drop leading and trailing whitespaces in each element.
-    sed -E 's/ *, */,/g; s/^.//; s/,,$/,/' <<<",${list},"
+    printf '%s\n' ",${list}," | sed -E 's/ *, */,/g; s/^.//; s/,,$/,/'
   else
     # Otherwise, consider it is a whitespace-separated list.
     # Convert whitespace characters into comma.
-    sed -E 's/ +/,/g; s/^.//' <<<" ${list} "
+    printf '%s\n' " ${list} " | sed -E 's/ +/,/g; s/^.//'
   fi
 }
 _sudo() {
@@ -48,11 +49,11 @@ download_and_checksum() {
   local checksum="${2:?}"
   retry curl --proto '=https' --tlsv1.2 -fsSL "${url}" -o tmp
   if type -P sha256sum >/dev/null; then
-    sha256sum -c - >/dev/null <<<"${checksum} *tmp"
+    printf '%s\n' "${checksum} *tmp" | sha256sum -c - >/dev/null
   elif type -P shasum >/dev/null; then
     # GitHub-hosted macOS runner does not install GNU Coreutils by default.
     # https://github.com/actions/runner-images/issues/90
-    shasum -a 256 -c - >/dev/null <<<"${checksum} *tmp"
+    printf '%s\n' "${checksum} *tmp" | shasum -a 256 -c - >/dev/null
   else
     warn "checksum requires 'sha256sum' or 'shasum' command; consider installing one of them; skipped checksum for $(basename -- "${url}")"
   fi
@@ -106,10 +107,10 @@ base_distro=''
 case "$(uname -s)" in
   Linux)
     ldd_version=$(ldd --version 2>&1 || true)
-    if grep -Fq musl <<<"${ldd_version}"; then
+    if printf '%s\n' "${ldd_version}" | grep -Fq musl; then
       host_os="linux-musl"
     else
-      host_glibc_version=$(grep -E "GLIBC|GNU libc" <<<"${ldd_version}" | sed -E "s/.* //g")
+      host_glibc_version=$(printf '%s\n' "${ldd_version}" | grep -E "GLIBC|GNU libc" | sed -E "s/.* //g")
       host_os="linux-gnu-${host_glibc_version}"
     fi
     if grep -Eq '^ID_LIKE=' /etc/os-release; then
@@ -219,8 +220,8 @@ if [[ "${tool}" == *"@"* ]]; then
   fi
   version="${tool#*@}"
   tool="${tool%@*}"
-  if [[ ! "${version}" =~ ^([1-9][0-9]*\.[0-9]+\.[0-9]+|0\.[1-9][0-9]*\.[0-9]+|^0\.0\.[0-9]+)(-[0-9A-Za-z\.-]+)?(\+[0-9A-Za-z\.-]+)?$|^latest$ ]]; then
-    if [[ ! "${version}" =~ ^([1-9][0-9]*(\.[0-9]+(\.[0-9]+)?)?|0\.[1-9][0-9]*(\.[0-9]+)?|^0\.0\.[0-9]+)(-[0-9A-Za-z\.-]+)?(\+[0-9A-Za-z\.-]+)?$|^latest$ ]]; then
+  if ! printf '%s\n' "${version}" | grep -Eq '^([1-9][0-9]*\.[0-9]+\.[0-9]+|0\.[1-9][0-9]*\.[0-9]+|^0\.0\.[0-9]+)(-[0-9A-Za-z\.-]+)?(\+[0-9A-Za-z\.-]+)?$|^latest$'; then
+    if ! printf '%s\n' "${version}" | grep -Eq '^([1-9][0-9]*(\.[0-9]+(\.[0-9]+)?)?|0\.[1-9][0-9]*(\.[0-9]+)?|^0\.0\.[0-9]+)(-[0-9A-Za-z\.-]+)?(\+[0-9A-Za-z\.-]+)?$|^latest$'; then
       bail "cache-cargo-install-action does not support non-semver version: '${version}'"
     fi
     fetch='1'
@@ -254,7 +255,7 @@ case "${features}" in
   *)
     features_flag="--features="
     while read -rd,; do
-      features_flag+="${REPLY},"
+      features_flag="${features_flag}${REPLY},"
     done < <(normalize_comma_or_space_separated "${features}")
     ;;
 esac
@@ -287,28 +288,38 @@ if [[ "${version}" == "latest" ]] || [[ -n "${fetch}" ]]; then
         case "${base_distro}" in
           debian | fedora | arch | alpine)
             printf '::group::Install packages required for installation (jq and/or curl)\n'
-            sys_packages=()
-            if ! type -P curl >/dev/null; then
-              sys_packages+=(ca-certificates curl)
-            fi
             if [[ "${dnf:-}" == "yum" ]]; then
               # On RHEL7-based distribution jq requires EPEL
               if ! type -P jq >/dev/null; then
-                sys_packages+=(epel-release)
-                sys_install "${sys_packages[@]}"
+                if ! type -P curl >/dev/null; then
+                  sys_install ca-certificates curl epel-release
+                else
+                  sys_install epel-release
+                fi
                 sys_install jq --enablerepo=epel
-              else
-                sys_install "${sys_packages[@]}"
+              elif ! type -P curl >/dev/null; then
+                sys_install ca-certificates curl
               fi
             else
               if ! type -P jq >/dev/null; then
-                # https://github.com/taiki-e/install-action/issues/521
-                if [[ "${base_distro}" == "arch" ]]; then
-                  sys_packages+=(glibc)
+                if ! type -P curl >/dev/null; then
+                  # https://github.com/taiki-e/install-action/issues/521
+                  if [[ "${base_distro}" == "arch" ]]; then
+                    sys_install ca-certificates curl glibc jq
+                  else
+                    sys_install ca-certificates curl jq
+                  fi
+                else
+                  # https://github.com/taiki-e/install-action/issues/521
+                  if [[ "${base_distro}" == "arch" ]]; then
+                    sys_install glibc jq
+                  else
+                    sys_install jq
+                  fi
                 fi
-                sys_packages+=(jq)
+              elif ! type -P curl >/dev/null; then
+                sys_install ca-certificates curl
               fi
-              sys_install "${sys_packages[@]}"
             fi
             printf '::endgroup::\n'
             ;;
@@ -329,9 +340,9 @@ if [[ "${version}" == "latest" ]] || [[ -n "${fetch}" ]]; then
         jq() { "${install_action_dir}/jq/bin/jq.exe" -b "$@"; }
       elif type -P jq >/dev/null; then
         # https://github.com/jqlang/jq/issues/1854
-        _tmp=$(jq -r .a <<<'{}' | wc -c)
+        _tmp=$(printf '{}\n' | jq -r .a | wc -c)
         if [[ "${_tmp}" != 5 ]]; then
-          _tmp=$({ jq -b -r .a 2>/dev/null <<<'{}' || true; } | wc -c)
+          _tmp=$({ printf '{}\n' | jq -b -r .a 2>/dev/null || true; } | wc -c)
           if [[ "${_tmp}" == 5 ]]; then
             jq() { command jq -b "$@"; }
           else
@@ -358,24 +369,22 @@ if [[ "${version}" == "latest" ]] || [[ -n "${fetch}" ]]; then
   crate_info=$(retry curl --user-agent "${ACTION_USER_AGENT}" --proto '=https' --tlsv1.2 -fsSL "https://crates.io/api/v1/crates/${tool}")
   case "${version}" in
     latest)
-      version=$(jq -r '.crate.max_stable_version' <<<"${crate_info}")
+      version=$(printf '%s\n' "${crate_info}" | jq -r '.crate.max_stable_version')
       if [[ "${version}" == "null" ]]; then
         bail "no stable version found for ${tool}; if you want to install a pre-release version, please specify the full version"
       fi
       ;;
     *)
-      if [[ ! "${version}" =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
+      if ! printf '%s\n' "${version}" | grep -Eq '^[0-9]+(\.[0-9]+)?$'; then
         bail "cache-cargo-install-action does not support non-semver version: '${version}'"
       fi
-      # shellcheck disable=SC2207
-      versions=($(jq -r ".versions[] | select(.num | startswith(\"${version}.\")) | select(.yanked == false) | .num" <<<"${crate_info}"))
       full_version=''
-      for v in ${versions[@]+"${versions[@]}"}; do
-        if [[ "${v}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(\+[0-9A-Za-z\.-]+)?$ ]]; then
+      while IFS='' read -r v; do
+        if printf '%s\n' "${v}" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+(\+[0-9A-Za-z\.-]+)?$'; then
           full_version="${v}"
           break
         fi
-      done
+      done < <(printf '%s\n' "${crate_info}" | jq -r ".versions[] | select(.num | startswith(\"${version}.\")) | select(.yanked == false) | .num")
       if [[ -z "${full_version}" ]]; then
         bail "no stable version  found for ${tool} that match with '${version}.*'; if you want to install a pre-release version, please specify the full version"
       fi
@@ -395,26 +404,26 @@ else
 fi
 args=""
 if [[ -n "${git}" ]]; then
-  args+="--git ${git}"
+  args="${args}--git ${git}"
   if [[ -n "${tag}" ]]; then
-    args+="--tag ${tag}"
+    args="${args} --tag ${tag}"
   else
-    args+="--rev ${rev}"
+    args="${args} --rev ${rev}"
   fi
 else
-  args+="--version ${version}"
+  args="${args}--version ${version}"
 fi
 if [[ -n "${locked}" ]]; then
-  args+=" ${locked}"
+  args="${args} ${locked}"
 fi
 if [[ -n "${features_flag}" ]]; then
-  args+=" ${features_flag}"
+  args="${args} ${features_flag}"
 fi
 if [[ -n "${no_default_features_flag}" ]]; then
-  args+=" ${no_default_features_flag}"
+  args="${args} ${no_default_features_flag}"
 fi
 if [[ -n "${all_features_flag}" ]]; then
-  args+=" ${all_features_flag}"
+  args="${args} ${all_features_flag}"
 fi
 cat >>"${GITHUB_OUTPUT}" <<EOF
 args=${args}

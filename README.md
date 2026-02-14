@@ -122,7 +122,7 @@ On Linux, if other required tools are missing, this action will attempt to insta
 
 On other platforms, the following tools are also required:
 
-- bash
+- bash 3.2+ (or busybox 1.34+ on Linux)
 - jq (only on non-Windows platforms, and when installing the latest version or the patch version of the specified version is omitted)
 - curl (only when installing the latest version or the patch version of the specified version is omitted)
 - tar

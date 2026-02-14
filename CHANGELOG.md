@@ -10,6 +10,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 ## [Unreleased]
 
+## [3.0.2] - 2026-02-14
+
 - Improve support for Linux systems without tar is installed.
 
 - Work around issue where cache doesn't work with "/bin/tar: unrecognized option: posix" warning on Alpine-based image.
@@ -106,7 +108,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 Initial release
 
-[Unreleased]: https://github.com/taiki-e/cache-cargo-install-action/compare/v3.0.1...HEAD
+[Unreleased]: https://github.com/taiki-e/cache-cargo-install-action/compare/v3.0.2...HEAD
+[3.0.2]: https://github.com/taiki-e/cache-cargo-install-action/compare/v3.0.1...v3.0.2
 [3.0.1]: https://github.com/taiki-e/cache-cargo-install-action/compare/v3.0.0...v3.0.1
 [3.0.0]: https://github.com/taiki-e/cache-cargo-install-action/compare/v2.3.1...v3.0.0
 [2.3.1]: https://github.com/taiki-e/cache-cargo-install-action/compare/v2.3.0...v2.3.1

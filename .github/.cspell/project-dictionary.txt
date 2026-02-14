@@ -5,7 +5,13 @@ coreutils
 doas
 enablerepo
 epel
+getcpu
+getentropy
+getname
+memfd
 microdnf
+pthread
 rootfs
+setname
 startswith
 xscale

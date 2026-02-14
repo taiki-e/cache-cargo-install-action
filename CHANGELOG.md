@@ -10,6 +10,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 ## [Unreleased]
 
+- Work around issue where cache doesn't work with "/bin/tar: unrecognized option: posix" warning on Alpine-based image.
+
 ## [3.0.1] - 2026-01-11
 
 - Improve support for Windows with MSYS2 bash. ([#15](https://github.com/taiki-e/cache-cargo-install-action/pull/15), thanks @chitoku-k)

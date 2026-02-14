@@ -127,6 +127,8 @@ case "$(uname -s)" in
           fi
         fi
         ;;
+      # Workaround for "/bin/tar: unrecognized option: posix" warning from actions/cache.
+      alpine) sys_install tar ;;
     esac
     ;;
   Darwin) host_os=macos ;;

@@ -127,8 +127,22 @@ case "$(uname -s)" in
           fi
         fi
         ;;
-      # Workaround for "/bin/tar: unrecognized option: posix" warning from actions/cache.
-      alpine) sys_install tar ;;
+    esac
+    # tar is required by actions/cache
+    case "${base_distro}" in
+      debian | fedora | arch)
+        if ! type -P tar >/dev/null; then
+          printf '::group::Install packages required for actions/cache (tar)\n'
+          sys_install tar
+          printf '::endgroup::\n'
+        fi
+        ;;
+      # Always install to work around "/bin/tar: unrecognized option: posix" warning from actions/cache.
+      alpine)
+        printf '::group::Install packages required for actions/cache (tar)\n'
+        sys_install tar
+        printf '::endgroup::\n'
+        ;;
     esac
     ;;
   Darwin) host_os=macos ;;

@@ -10,6 +10,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 ## [Unreleased]
 
+- Improve support for Linux systems without tar is installed.
+
 - Work around issue where cache doesn't work with "/bin/tar: unrecognized option: posix" warning on Alpine-based image.
 
 ## [3.0.1] - 2026-01-11

@@ -122,15 +122,8 @@ runs:
       shell: bash
       env:
         # NB: Sync with Windows case.
-        INPUT_GIT: ${{ steps.pre-unix.outputs.git }}
-        INPUT_REV: ${{ steps.pre-unix.outputs.rev }}
-        INPUT_TAG: ${{ steps.pre-unix.outputs.tag }}
+        INPUT_ARGS: ${{ steps.pre-unix.outputs.args }}
         INPUT_TOOL: ${{ steps.pre-unix.outputs.tool }}
-        INPUT_VERSION: ${{ steps.pre-unix.outputs.version }}
-        INPUT_LOCKED: ${{ steps.pre-unix.outputs.locked }}
-        INPUT_FEATURES_FLAG: ${{ steps.pre-unix.outputs.features_flag }}
-        INPUT_NO_DEFAULT_FEATURES_FLAG: ${{ steps.pre-unix.outputs.no_default_features_flag }}
-        INPUT_ALL_FEATURES_FLAG: ${{ steps.pre-unix.outputs.all_features_flag }}
       if: steps.cache.outputs.cache-hit != 'true' && runner.os != 'Windows'
     - name: Install ${{ inputs.tool }} (Windows)
       run: |
@@ -155,13 +148,6 @@ runs:
       shell: pwsh
       env:
         # NB: Sync with non-Windows case.
-        INPUT_GIT: ${{ steps.pre-windows.outputs.git }}
-        INPUT_REV: ${{ steps.pre-windows.outputs.rev }}
-        INPUT_TAG: ${{ steps.pre-windows.outputs.tag }}
+        INPUT_ARGS: ${{ steps.pre-windows.outputs.args }}
         INPUT_TOOL: ${{ steps.pre-windows.outputs.tool }}
-        INPUT_VERSION: ${{ steps.pre-windows.outputs.version }}
-        INPUT_LOCKED: ${{ steps.pre-windows.outputs.locked }}
-        INPUT_FEATURES_FLAG: ${{ steps.pre-windows.outputs.features_flag }}
-        INPUT_NO_DEFAULT_FEATURES_FLAG: ${{ steps.pre-windows.outputs.no_default_features_flag }}
-        INPUT_ALL_FEATURES_FLAG: ${{ steps.pre-windows.outputs.all_features_flag }}
       if: steps.cache.outputs.cache-hit != 'true' && runner.os == 'Windows'

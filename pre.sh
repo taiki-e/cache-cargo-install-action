@@ -23,6 +23,19 @@ warn() {
 info() {
   printf >&2 'info: %s\n' "$*"
 }
+normalize_comma_or_space_separated() {
+  # Normalize whitespace characters into space because it's hard to handle single input contains lines with POSIX sed alone.
+  local list="${1//[$'\r\n\t']/ }"
+  if [[ "${list}" == *","* ]]; then
+    # If a comma is contained, consider it is a comma-separated list.
+    # Drop leading and trailing whitespaces in each element.
+    sed -E 's/ *, */,/g; s/^.//; s/,,$/,/' <<<",${list},"
+  else
+    # Otherwise, consider it is a whitespace-separated list.
+    # Convert whitespace characters into comma.
+    sed -E 's/ +/,/g; s/^.//' <<<" ${list} "
+  fi
+}
 _sudo() {
   if type -P sudo >/dev/null; then
     sudo "$@"
@@ -238,7 +251,12 @@ esac
 
 case "${features}" in
   '') features_flag='' ;;
-  *) features_flag="--features=${features}" ;;
+  *)
+    features_flag="--features="
+    while read -rd,; do
+      features_flag+="${REPLY},"
+    done < <(normalize_comma_or_space_separated "${features}")
+    ;;
 esac
 
 case "${no_default_features}" in
@@ -375,16 +393,32 @@ else
   features="${features//,/-}" # Commas are not allowed in cache key names
   key="${tool}-${version}-${host_arch}-${host_os}${locked_key}-features-${features:-default}-no-default-features-${no_default_features}-all-features-${all_features}"
 fi
+args=""
+if [[ -n "${git}" ]]; then
+  args+="--git ${git}"
+  if [[ -n "${tag}" ]]; then
+    args+="--tag ${tag}"
+  else
+    args+="--rev ${rev}"
+  fi
+else
+  args+="--version ${version}"
+fi
+if [[ -n "${locked}" ]]; then
+  args+=" ${locked}"
+fi
+if [[ -n "${features_flag}" ]]; then
+  args+=" ${features_flag}"
+fi
+if [[ -n "${no_default_features_flag}" ]]; then
+  args+=" ${no_default_features_flag}"
+fi
+if [[ -n "${all_features_flag}" ]]; then
+  args+=" ${all_features_flag}"
+fi
 cat >>"${GITHUB_OUTPUT}" <<EOF
+args=${args}
 tool=${tool}
-version=${version}
 key=${key}
 path=${bin_dir}
-locked=${locked}
-git=${git}
-tag=${tag}
-rev=${rev}
-features_flag=${features_flag}
-no_default_features_flag=${no_default_features_flag}
-all_features_flag=${all_features_flag}
 EOF

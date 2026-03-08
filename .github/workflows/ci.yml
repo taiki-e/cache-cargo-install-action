@@ -121,7 +121,7 @@ jobs:
         if: startsWith(matrix.os, 'windows')
       - name: Test cmd
         run: cargo llvm-cov --version
-        shell: cmd
+        shell: cmd # zizmor: ignore[misfeature] used for compatibility testing
         if: startsWith(matrix.os, 'windows')
 
   test-container:

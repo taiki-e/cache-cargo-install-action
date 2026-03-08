@@ -10,6 +10,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 ## [Unreleased]
 
+## [3.0.3] - 2026-03-08
+
 - Avoid triggering [zizmor ref-confusion](https://docs.zizmor.sh/audits/#ref-confusion) when using this action in form of `uses: taiki-e/cache-cargo-install-action@v3`.
 
 ## [3.0.2] - 2026-02-14
@@ -110,7 +112,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 Initial release
 
-[Unreleased]: https://github.com/taiki-e/cache-cargo-install-action/compare/v3.0.2...HEAD
+[Unreleased]: https://github.com/taiki-e/cache-cargo-install-action/compare/v3.0.3...HEAD
+[3.0.3]: https://github.com/taiki-e/cache-cargo-install-action/compare/v3.0.2...v3.0.3
 [3.0.2]: https://github.com/taiki-e/cache-cargo-install-action/compare/v3.0.1...v3.0.2
 [3.0.1]: https://github.com/taiki-e/cache-cargo-install-action/compare/v3.0.0...v3.0.1
 [3.0.0]: https://github.com/taiki-e/cache-cargo-install-action/compare/v2.3.1...v3.0.0

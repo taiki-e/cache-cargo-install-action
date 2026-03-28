@@ -10,6 +10,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 ## [Unreleased]
 
+- Pin `actions/cache` action with commit hash.
+
 ## [3.0.3] - 2026-03-08
 
 - Avoid triggering [zizmor ref-confusion](https://docs.zizmor.sh/audits/#ref-confusion) when using this action in form of `uses: taiki-e/cache-cargo-install-action@v3`.

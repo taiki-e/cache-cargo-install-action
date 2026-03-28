@@ -156,9 +156,8 @@ case "${host_arch}" in
   xscale | arm | armv*l | loongarch64 | ppc | ppc64 | ppc64le | riscv64 | s390x | sun4v) ;;
   # Ignore MIPS for now, as we also need to detect endianness.
   mips | mips64) bail "MIPS runner is not supported yet by this action; if you need support for this platform, please submit an issue at <https://github.com/taiki-e/cache-cargo-install-action>" ;;
-  # GitHub Actions Runner supports x86_64/AArch64/Arm Linux, x86_64/AArch64 Windows,
-  # and x86_64/AArch64 macOS.
-  # https://github.com/actions/runner/blob/v2.321.0/.github/workflows/build.yml#L21
+  # GitHub Actions Runner supports x86_64/AArch64/Arm Linux and x86_64/AArch64 Windows/macOS.
+  # https://github.com/actions/runner/blob/v2.332.0/.github/workflows/build.yml#L24
   # https://docs.github.com/en/actions/reference/runners/self-hosted-runners#supported-processor-architectures
   # And IBM provides runners for powerpc64le/s390x Linux.
   # https://github.com/IBM/actionspz

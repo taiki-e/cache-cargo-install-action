@@ -146,7 +146,29 @@ case "$(uname -s)" in
     esac
     ;;
   Darwin) host_os=macos ;;
-  MINGW* | MSYS* | CYGWIN* | Windows_NT) host_os=windows ;;
+  MINGW* | MSYS* | CYGWIN* | Windows_NT)
+    host_os=windows
+    home="${HOME:-}"
+    if [[ -z "${home}" ]]; then
+      # https://github.com/IBM/actionspz/issues/30
+      home=$(realpath ~)
+      export HOME="${home}"
+    fi
+    if [[ "${home}" == "/home/"* ]]; then
+      if [[ -d "${home/\/home\///c/Users/}" ]]; then
+        # MSYS2 https://github.com/taiki-e/install-action/pull/518#issuecomment-2160736760
+        home="${home/\/home\///c/Users/}"
+      elif [[ -d "${home/\/home\///cygdrive/c/Users/}" ]]; then
+        # Cygwin https://github.com/taiki-e/install-action/issues/224#issuecomment-1720196288
+        home="${home/\/home\///cygdrive/c/Users/}"
+      else
+        warn "\$HOME starting /home/ (${home}) on Windows bash is usually fake path, this may cause checkout issue"
+      fi
+    fi
+    mkdir -p -- "${home}/.cache-cargo-install-action"
+    # See action.yml.
+    touch -- "${home}/.cache-cargo-install-action/init"
+    ;;
   *) bail "unrecognized OS type '$(uname -s)'" ;;
 esac
 host_arch="$(uname -m)"

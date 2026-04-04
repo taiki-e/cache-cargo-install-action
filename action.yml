@@ -40,7 +40,9 @@ inputs:
 runs:
   using: composite
   steps:
-    - run: |
+    - name: Prepare (non-Windows)
+      id: pre-unix
+      run: |
         set -eu
         if ! command -v bash >/dev/null; then
           if grep -Eq '^ID=alpine' /etc/os-release; then
@@ -59,13 +61,10 @@ runs:
             exit 1
           fi
         fi
+        bash --noprofile --norc "${GITHUB_ACTION_PATH:?}/pre.sh"
       shell: sh
-      if: runner.os == 'Linux'
-    - name: Pre Cache
-      id: pre
-      run: bash --noprofile --norc "${GITHUB_ACTION_PATH:?}/pre.sh"
-      shell: bash
       env:
+        # NB: Sync with Windows case.
         INPUT_TOOL: ${{ inputs.tool }}
         INPUT_LOCKED: ${{ inputs.locked }}
         INPUT_GIT: ${{ inputs.git }}
@@ -75,23 +74,94 @@ runs:
         INPUT_NO_DEFAULT_FEATURES: ${{ inputs.no-default-features }}
         INPUT_ALL_FEATURES: ${{ inputs.all-features }}
         ACTION_USER_AGENT: ${{ github.action_repository }} (${{ github.action_ref }})
+      if: runner.os != 'Windows'
+    # Use pwsh and retry on bash startup failure to work around windows-11-arm runner bug:
+    # https://github.com/actions/partner-runner-images/issues/169
+    - name: Prepare (Windows)
+      id: pre-windows
+      run: |
+        Set-StrictMode -Version Latest
+        for ($i=1; $i -le 10; $i++) {
+          $prev_err_action = $ErrorActionPreference
+          $ErrorActionPreference = "Continue"
+          & bash --noprofile --norc "$env:GITHUB_ACTION_PATH/pre.sh"
+          $code = $LASTEXITCODE
+          $ErrorActionPreference = "$prev_err_action"
+          if (Test-Path "$env:USERPROFILE\.cache-cargo-install-action\init") {
+            # If bash started successfully, pre.sh creates init file.
+            Remove-Item "$env:USERPROFILE\.cache-cargo-install-action\init" -Force
+            exit $code
+          }
+          if ($i -lt 10) {
+            Write-Output "::warning::preparation failed due to bash startup failure (<https://github.com/actions/partner-runner-images/issues/169>); retrying..."
+          }
+        }
+        Write-Output "::error::preparation failed due to bash startup failure (<https://github.com/actions/partner-runner-images/issues/169>); this maybe resolved by re-running job"
+        exit 1
+      shell: pwsh
+      env:
+        # NB: Sync with non-Windows case.
+        INPUT_TOOL: ${{ inputs.tool }}
+        INPUT_LOCKED: ${{ inputs.locked }}
+        INPUT_GIT: ${{ inputs.git }}
+        INPUT_TAG: ${{ inputs.tag }}
+        INPUT_REV: ${{ inputs.rev }}
+        INPUT_FEATURES: ${{ inputs.features }}
+        INPUT_NO_DEFAULT_FEATURES: ${{ inputs.no-default-features }}
+        INPUT_ALL_FEATURES: ${{ inputs.all-features }}
+        ACTION_USER_AGENT: ${{ github.action_repository }} (${{ github.action_ref }})
+      if: runner.os == 'Windows'
     - name: Restore Cache
       id: cache
       uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
       with:
-        path: ${{ steps.pre.outputs.path }}
-        key: ${{ steps.pre.outputs.key }}
-    - name: Install ${{ inputs.tool }}
+        path: ${{ runner.os == 'Windows' && steps.pre-windows.outputs.path || steps.pre-unix.outputs.path }}
+        key: ${{ runner.os == 'Windows' && steps.pre-windows.outputs.key || steps.pre-unix.outputs.key }}
+    - name: Install ${{ inputs.tool }} (non-Windows)
       run: bash --noprofile --norc "${GITHUB_ACTION_PATH:?}/install.sh"
       shell: bash
       env:
-        INPUT_GIT: ${{ steps.pre.outputs.git }}
-        INPUT_REV: ${{ steps.pre.outputs.rev }}
-        INPUT_TAG: ${{ steps.pre.outputs.tag }}
-        INPUT_TOOL: ${{ steps.pre.outputs.tool }}
-        INPUT_VERSION: ${{ steps.pre.outputs.version }}
-        INPUT_LOCKED: ${{ steps.pre.outputs.locked }}
-        INPUT_FEATURES_FLAG: ${{ steps.pre.outputs.features_flag }}
-        INPUT_NO_DEFAULT_FEATURES_FLAG: ${{ steps.pre.outputs.no_default_features_flag }}
-        INPUT_ALL_FEATURES_FLAG: ${{ steps.pre.outputs.all_features_flag }}
-      if: steps.cache.outputs.cache-hit != 'true'
+        # NB: Sync with Windows case.
+        INPUT_GIT: ${{ steps.pre-unix.outputs.git }}
+        INPUT_REV: ${{ steps.pre-unix.outputs.rev }}
+        INPUT_TAG: ${{ steps.pre-unix.outputs.tag }}
+        INPUT_TOOL: ${{ steps.pre-unix.outputs.tool }}
+        INPUT_VERSION: ${{ steps.pre-unix.outputs.version }}
+        INPUT_LOCKED: ${{ steps.pre-unix.outputs.locked }}
+        INPUT_FEATURES_FLAG: ${{ steps.pre-unix.outputs.features_flag }}
+        INPUT_NO_DEFAULT_FEATURES_FLAG: ${{ steps.pre-unix.outputs.no_default_features_flag }}
+        INPUT_ALL_FEATURES_FLAG: ${{ steps.pre-unix.outputs.all_features_flag }}
+      if: steps.cache.outputs.cache-hit != 'true' && runner.os != 'Windows'
+    - name: Install ${{ inputs.tool }} (Windows)
+      run: |
+        Set-StrictMode -Version Latest
+        for ($i=1; $i -le 10; $i++) {
+          $prev_err_action = $ErrorActionPreference
+          $ErrorActionPreference = "Continue"
+          & bash --noprofile --norc "$env:GITHUB_ACTION_PATH/install.sh"
+          $code = $LASTEXITCODE
+          $ErrorActionPreference = "$prev_err_action"
+          if (Test-Path "$env:USERPROFILE\.cache-cargo-install-action\init") {
+            # If bash started successfully, main.sh creates init file.
+            Remove-Item "$env:USERPROFILE\.cache-cargo-install-action\init" -Force
+            exit $code
+          }
+          if ($i -lt 10) {
+            Write-Output "::warning::installation failed due to bash startup failure (<https://github.com/actions/partner-runner-images/issues/169>); retrying..."
+          }
+        }
+        Write-Output "::error::installation failed due to bash startup failure (<https://github.com/actions/partner-runner-images/issues/169>); this maybe resolved by re-running job"
+        exit 1
+      shell: pwsh
+      env:
+        # NB: Sync with non-Windows case.
+        INPUT_GIT: ${{ steps.pre-windows.outputs.git }}
+        INPUT_REV: ${{ steps.pre-windows.outputs.rev }}
+        INPUT_TAG: ${{ steps.pre-windows.outputs.tag }}
+        INPUT_TOOL: ${{ steps.pre-windows.outputs.tool }}
+        INPUT_VERSION: ${{ steps.pre-windows.outputs.version }}
+        INPUT_LOCKED: ${{ steps.pre-windows.outputs.locked }}
+        INPUT_FEATURES_FLAG: ${{ steps.pre-windows.outputs.features_flag }}
+        INPUT_NO_DEFAULT_FEATURES_FLAG: ${{ steps.pre-windows.outputs.no_default_features_flag }}
+        INPUT_ALL_FEATURES_FLAG: ${{ steps.pre-windows.outputs.all_features_flag }}
+      if: steps.cache.outputs.cache-hit != 'true' && runner.os == 'Windows'

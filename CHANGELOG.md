@@ -10,6 +10,10 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 ## [Unreleased]
 
+- Implement workaround for [windows-11-arm runner bug](https://github.com/actions/partner-runner-images/issues/169) which may causes issue that the action successfully completes but the crate is not installed.
+
+  We have not yet received any reports of this issue occurring with this action, but given the nature of the problem, it is possible that it could be affected.
+
 ## [3.0.4] - 2026-03-28
 
 - Pin `actions/cache` action with commit hash.

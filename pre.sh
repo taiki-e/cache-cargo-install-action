@@ -93,7 +93,7 @@ base_distro=''
 case "$(uname -s)" in
   Linux)
     ldd_version=$(ldd --version 2>&1 || true)
-    if grep -Fq musl <<<"${ldd_version}"; then
+    if [[ "${ldd_version}" == *'musl'* ]]; then
       host_os="linux-musl"
     else
       host_glibc_version=$(grep -E "GLIBC|GNU libc" <<<"${ldd_version}" | sed -E "s/.* //g")

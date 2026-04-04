@@ -15,6 +15,7 @@ For performance and robustness, we recommend using [install-action] if the tool 
   - [Inputs](#inputs)
   - [Example workflow](#example-workflow)
 - [Migrate from/to install-action](#migrate-fromto-install-action)
+- [Security](#security)
 - [Compatibility](#compatibility)
 - [Related Projects](#related-projects)
 - [License](#license)
@@ -109,6 +110,10 @@ The interface of this action is a subset of the interface of [install-action], s
   ```
 
 - install-action supports `@<tool_name>` shorthand, but this action does not.
+
+## Security
+
+The `@v<major>` tags are updated with each release. To enhance workflow stability and security against supply chain attacks, use the `@v<major>.<minor>.<patch>` tag or their hash to pin the version. Since all releases are immutable, pinning the version in either way should have the same effect.
 
 ## Compatibility
 

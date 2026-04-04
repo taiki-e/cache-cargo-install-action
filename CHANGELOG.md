@@ -10,6 +10,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 ## [Unreleased]
 
+## [3.0.5] - 2026-04-04
+
 - Implement workaround for [windows-11-arm runner bug](https://github.com/actions/partner-runner-images/issues/169) which may causes issue that the action successfully completes but the crate is not installed.
 
   We have not yet received any reports of this issue occurring with this action, but given the nature of the problem, it is possible that it could be affected.
@@ -120,7 +122,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 Initial release
 
-[Unreleased]: https://github.com/taiki-e/cache-cargo-install-action/compare/v3.0.4...HEAD
+[Unreleased]: https://github.com/taiki-e/cache-cargo-install-action/compare/v3.0.5...HEAD
+[3.0.5]: https://github.com/taiki-e/cache-cargo-install-action/compare/v3.0.4...v3.0.5
 [3.0.4]: https://github.com/taiki-e/cache-cargo-install-action/compare/v3.0.3...v3.0.4
 [3.0.3]: https://github.com/taiki-e/cache-cargo-install-action/compare/v3.0.2...v3.0.3
 [3.0.2]: https://github.com/taiki-e/cache-cargo-install-action/compare/v3.0.1...v3.0.2

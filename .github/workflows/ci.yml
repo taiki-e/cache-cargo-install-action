@@ -23,7 +23,7 @@ concurrency:
 
 jobs:
   tidy:
-    uses: taiki-e/github-actions/.github/workflows/tidy.yml@main
+    uses: taiki-e/github-actions/.github/workflows/tidy.yml@7e4093bf4e87dd120ac0c3be2e47ebe7f737a47d # main
     permissions:
       contents: write # for creating branch for pr
       pull-requests: write # unused (used in `codegen-automerge: true` case)
@@ -81,8 +81,10 @@ jobs:
           printf '%s\n' 'C:\tools\cygwin\bin' >>"${GITHUB_PATH}"
           printf '%s\n' 'C:\tools\cygwin\usr\bin' >>"${GITHUB_PATH}"
         if: matrix.bash == 'cygwin'
-      - uses: taiki-e/checkout-action@v1
-      - uses: taiki-e/github-actions/install-rust@stable
+      - uses: taiki-e/checkout-action@7d1e50e93dc4fb3bba58f85018fadf77898aee8b # v1.4.2
+      - uses: taiki-e/github-actions/install-rust@504baa777e8f0076810d1e343d5387a2ada13b98 # main # zizmor: ignore[stale-action-refs]
+        with:
+          toolchain: stable
       - uses: ./
         with:
           tool: ${{ matrix.tool1 || 'cargo-hack' }}
@@ -206,11 +208,13 @@ jobs:
         run: apk --no-cache add bash ca-certificates curl gcc musl-dev
         shell: sh
         if: startsWith(matrix.container, 'alpine') && matrix.container != 'alpine:3.22' && matrix.container != 'alpine:3.23'
-      - uses: taiki-e/github-actions/install-rust@stable
+      - uses: taiki-e/github-actions/install-rust@504baa777e8f0076810d1e343d5387a2ada13b98 # main # zizmor: ignore[stale-action-refs]
+        with:
+          toolchain: stable
         if: matrix.container != 'alpine:3.22' && matrix.container != 'alpine:3.23'
       - run: apt-get -qq -o Dpkg::Use-Pty=0 purge -y curl
         if: startsWith(matrix.container, 'ubuntu') || startsWith(matrix.container, 'debian')
-      - uses: taiki-e/checkout-action@v1
+      - uses: taiki-e/checkout-action@7d1e50e93dc4fb3bba58f85018fadf77898aee8b # v1.4.2
       - run: apk --no-cache del curl
         shell: sh
         if: startsWith(matrix.container, 'alpine') && matrix.container != 'alpine:3.22' && matrix.container != 'alpine:3.23'

@@ -33,7 +33,7 @@ _sudo() {
 download_and_checksum() {
   local url="${1:?}"
   local checksum="${2:?}"
-  retry curl --proto '=https' --tlsv1.2 -fsSL "${url}" -o tmp
+  retry curl --proto '=https' --tlsv1.2 -fsSL --retry 10 "${url}" -o tmp
   if type -P sha256sum >/dev/null; then
     sha256sum -c - >/dev/null <<<"${checksum} *tmp"
   elif type -P shasum >/dev/null; then
@@ -345,7 +345,7 @@ if [[ "${version}" == "latest" ]] || [[ -n "${fetch}" ]]; then
     *) bail "unsupported host OS '${host_os}'" ;;
   esac
 
-  crate_info=$(retry curl --user-agent "${ACTION_USER_AGENT}" --proto '=https' --tlsv1.2 -fsSL "https://crates.io/api/v1/crates/${tool}")
+  crate_info=$(retry curl --user-agent "${ACTION_USER_AGENT}" --proto '=https' --tlsv1.2 -fsSL --retry 10 "https://crates.io/api/v1/crates/${tool}")
   case "${version}" in
     latest)
       version=$(jq -r '.crate.max_stable_version' <<<"${crate_info}")

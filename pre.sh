@@ -358,7 +358,7 @@ if [[ "${version}" == "latest" ]] || [[ -n "${fetch}" ]]; then
         bail "cache-cargo-install-action does not support non-semver version: '${version}'"
       fi
       # shellcheck disable=SC2207
-      versions=($(jq -r ".versions[] | select(.num | startswith(\"${version}.\")) | select(.yanked == false) | .num" <<<"${crate_info}"))
+      versions=($(jq -r --arg start "${version}." '.versions[] | select(.num | startswith($start)) | select(.yanked == false) | .num' <<<"${crate_info}"))
       full_version=''
       for v in ${versions[@]+"${versions[@]}"}; do
         if [[ "${v}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(\+[0-9A-Za-z\.-]+)?$ ]]; then

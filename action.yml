@@ -84,7 +84,7 @@ runs:
         for ($i=1; $i -le 10; $i++) {
           $prev_err_action = $ErrorActionPreference
           $ErrorActionPreference = "Continue"
-          & bash --noprofile --norc "$env:GITHUB_ACTION_PATH/pre.sh"
+          & bash --noprofile --norc "$env:GITHUB_ACTION_PATH\pre.sh"
           $code = $LASTEXITCODE
           $ErrorActionPreference = "$prev_err_action"
           if (Test-Path "$env:USERPROFILE\.cache-cargo-install-action\init") {
@@ -138,7 +138,7 @@ runs:
         for ($i=1; $i -le 10; $i++) {
           $prev_err_action = $ErrorActionPreference
           $ErrorActionPreference = "Continue"
-          & bash --noprofile --norc "$env:GITHUB_ACTION_PATH/install.sh"
+          & bash --noprofile --norc "$env:GITHUB_ACTION_PATH\install.sh"
           $code = $LASTEXITCODE
           $ErrorActionPreference = "$prev_err_action"
           if (Test-Path "$env:USERPROFILE\.cache-cargo-install-action\init") {

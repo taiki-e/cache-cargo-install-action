@@ -96,7 +96,8 @@ case "$(uname -s)" in
     if [[ "${ldd_version}" == *'musl'* ]]; then
       host_os="linux-musl"
     else
-      host_glibc_version=$(grep -E "GLIBC|GNU libc" <<<"${ldd_version}" | sed -E "s/.* //g")
+      host_glibc_version=$(grep -E "GLIBC|GNU libc" <<<"${ldd_version}")
+      host_glibc_version="${host_glibc_version##* }"
       host_os="linux-gnu-${host_glibc_version}"
     fi
     if [[ -e /etc/redhat-release ]]; then

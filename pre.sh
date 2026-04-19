@@ -176,7 +176,7 @@ case "$(uname -s)" in
     fi
     mkdir -p -- "${home}/.cache-cargo-install-action"
     # See action.yml.
-    touch -- "${home}/.cache-cargo-install-action/init"
+    printf '' >|"${home}/.cache-cargo-install-action/init"
     ;;
   *) bail "unrecognized OS type '$(uname -s)'" ;;
 esac

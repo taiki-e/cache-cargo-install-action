@@ -1,6 +1,7 @@
 almalinux
 archlinux
 binstall
+CDPATH
 coreutils
 cygdrive
 doas

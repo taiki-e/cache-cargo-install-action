@@ -10,6 +10,8 @@ Note: In this file, do not use the hard wrap in the middle of a sentence for com
 
 ## [Unreleased]
 
+- Update `actions/cache` to 5.0.5.
+
 ## [3.0.6] - 2026-04-08
 
 - Improve robustness for network failure.

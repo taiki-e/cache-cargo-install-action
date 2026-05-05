@@ -45,6 +45,9 @@ To install the latest version:
     tool: cargo-hack
 ```
 
+Installing from source uses the default Rust toolchain for the current environment.
+This can be overridden by the [`RUSTUP_TOOLCHAIN` environment variable](https://rust-lang.github.io/rustup/devel/environment-variables.html) if Rust is installed via rustup.
+
 To install a specific version, use `@version` syntax:
 
 ```yaml

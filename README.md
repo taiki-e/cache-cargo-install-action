@@ -118,6 +118,8 @@ The interface of this action is a subset of the interface of [install-action], s
 
 The `@v<major>` tags are updated with each release. If you want to enhance workflow stability and security against supply chain attacks, consider using the `@v<major>.<minor>.<patch>` tag or their hash to pin the version and regularly updating with dependency cooldown. Since all releases are immutable, pinning the version in either way should have the same effect.
 
+Since this action uses GitHub Actions caching, [please be careful when using it in release workflows](https://adnanthekhan.com/2024/05/06/the-monsters-in-your-build-cache-github-actions-cache-poisoning/#dont-use-actions-caching-in-release-builds).
+
 ## Compatibility
 
 This action has been tested for GitHub-hosted runners (Ubuntu, macOS, Windows) and containers (Ubuntu, Debian, Fedora, Alma, Arch, Alpine).

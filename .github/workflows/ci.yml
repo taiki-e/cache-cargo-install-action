@@ -33,10 +33,12 @@ jobs:
       matrix:
         include:
           # NB: Sync list with https://github.com/taiki-e/checkout-action/blob/HEAD/.github/workflows/ci.yml
-          - os: ubuntu-22.04
-          - os: ubuntu-22.04-arm
+          - os: ubuntu-26.04
+          - os: ubuntu-26.04-arm
           - os: ubuntu-24.04
           - os: ubuntu-24.04-arm
+          - os: ubuntu-22.04
+          - os: ubuntu-22.04-arm
           - os: ubuntu-slim
           - os: ubuntu-22.04
             tool1: cargo-hack@0.5.24
@@ -44,18 +46,18 @@ jobs:
           - os: ubuntu-22.04
             tool1: cargo-hack@0.5
             tool2: cargo-llvm-cov@0.4
+          - os: macos-26
           - os: macos-15
           - os: macos-15-intel
-          - os: macos-26
-          - os: windows-2022
-          - os: windows-2022
+          - os: windows-2025
+          - os: windows-2025
             bash: msys64
-          - os: windows-2022
+          - os: windows-2025
             bash: cygwin
-          - os: windows-2025
-          - os: windows-2025
+          - os: windows-2022
+          - os: windows-2022
             bash: msys64
-          - os: windows-2025
+          - os: windows-2022
             bash: cygwin
           - os: windows-11-arm
           - os: windows-2025
@@ -168,8 +170,8 @@ jobs:
           - alpine:3.23 # musl 1.2.5
           # - openwrt/rootfs:x86-64-openwrt-24.10 # musl 1.2.5
     runs-on: ubuntu-24.04
-    timeout-minutes: 60
     container: ${{ matrix.container }}
+    timeout-minutes: 60
     steps:
       - name: Install requirements (old debian)
         run: |

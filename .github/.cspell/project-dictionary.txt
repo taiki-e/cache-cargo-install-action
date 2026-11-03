@@ -12,7 +12,6 @@ LASTEXITCODE
 memfd
 microdnf
 pthread
-rootfs
 setname
 startswith
 USERPROFILE

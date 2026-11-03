@@ -83,22 +83,22 @@ jobs:
         with:
           tool: rust@stable
           fallback: none
-      - uses: ./
+      - uses: $/
         with:
           tool: ${{ matrix.tool1 || 'cargo-hack' }}
           locked: false
       - run: cargo hack --version
-      - uses: ./
+      - uses: $/
         with:
           tool: ${{ matrix.tool2 || 'cargo-llvm-cov' }}
       - run: cargo llvm-cov --version
-      - uses: ./
+      - uses: $/
         with:
           tool: parse-changelog
           git: https://github.com/taiki-e/parse-changelog
           rev: d231414
       - run: parse-changelog --version
-      - uses: ./
+      - uses: $/
         with:
           tool: cargo-minimal-versions
           git: https://github.com/taiki-e/cargo-minimal-versions
@@ -222,12 +222,12 @@ jobs:
       - run: apk --no-cache del bash
         shell: sh
         if: startsWith(matrix.container, 'alpine')
-      - uses: ./
+      - uses: $/
         with:
           tool: cargo-hack
           locked: false
       - run: cargo hack --version
-      - uses: ./
+      - uses: $/
         with:
           tool: cargo-llvm-cov
       - run: cargo llvm-cov --version
